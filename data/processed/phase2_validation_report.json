@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-09-11T11:58:42.701126",
+  "checks": [
+    {
+      "check": "Raw Data Immutability",
+      "status": "PASSED",
+      "detail": "All 5 files in data/raw/ remained completely unmodified."
+    },
+    {
+      "check": "Canonical School IDs",
+      "status": "PASSED",
+      "detail": "100% of school IDs match SCHxxxx with 0 orphaned foreign keys."
+    },
+    {
+      "check": "Date Normalization",
+      "status": "PASSED",
+      "detail": "100% of dates parsed to ISO YYYY-MM-DD between 2025-04-01 and 2026-03-31."
+    },
+    {
+      "check": "Multilingual Booleans",
+      "status": "PASSED",
+      "detail": "All boolean fields standardized to TRUE, FALSE, or UNKNOWN (UNKNOWN != FALSE)."
+    },
+    {
+      "check": "Impossible Attendance Flagging",
+      "status": "PASSED",
+      "detail": "835 impossible records flagged with is_impossible_attendance=True and excluded from trusted metrics."
+    },
+    {
+      "check": "Proxy Attendance Fraud Flagging",
+      "status": "PASSED",
+      "detail": "1,011 Sunday 100% records flagged with is_proxy_attendance=True and quarantined."
+    },
+    {
+      "check": "Procurement Unit Standardization",
+      "status": "PASSED",
+      "detail": "All quantities converted to kg; 1,909 missing quantities and 646 missing costs rescued via constant commodity prices."
+    },
+    {
+      "check": "FLN Score Standardization",
+      "status": "PASSED",
+      "detail": "All scores normalized to 0\u2013100%; letter grade proxy flagged for sensitivity analysis."
+    },
+    {
+      "check": "District Imputation",
+      "status": "PASSED",
+      "detail": "21 districts deterministically resolved from block hierarchy; 2 marked Unknown."
+    },
+    {
+      "check": "Audit Lineage Preservation",
+      "status": "PASSED",
+      "detail": "Cleaning audit log contains complete provenance of all modifications."
+    }
+  ],
+  "summary": {
+    "schools": {
+      "raw_rows": 618,
+      "clean_rows": 600,
+      "trusted_rows": 598,
+      "flagged_rows": 2,
+      "excluded_rows": 0,
+      "duplicates_removed": 18,
+      "missing_values_resolved": 20,
+      "missing_values_remaining": 2,
+      "anomalies_detected": 0
+    },
+    "attendance": {
+      "raw_rows": 20800,
+      "clean_rows": 19994,
+      "trusted_rows": 18065,
+      "flagged_rows": 1929,
+      "excluded_rows": 1929,
+      "duplicates_removed": 806,
+      "missing_values_resolved": 405,
+      "missing_values_remaining": 0,
+      "anomalies_detected": 1929
+    },
+    "infrastructure": {
+      "raw_rows": 3150,
+      "clean_rows": 3000,
+      "trusted_rows": 3000,
+      "flagged_rows": 0,
+      "excluded_rows": 0,
+      "duplicates_removed": 150,
+      "missing_values_resolved": 0,
+      "missing_values_remaining": 164,
+      "anomalies_detected": 0
+    },
+    "procurement": {
+      "raw_rows": 12360,
+      "clean_rows": 12000,
+      "trusted_rows": 11909,
+      "flagged_rows": 91,
+      "excluded_rows": 0,
+      "duplicates_removed": 360,
+      "missing_values_resolved": 2292,
+      "missing_values_remaining": 91,
+      "anomalies_detected": 0
+    },
+    "assessments": {
+      "raw_rows": 8000,
+      "clean_rows": 8000,
+      "trusted_rows": 8000,
+      "flagged_rows": 1983,
+      "excluded_rows": 0,
+      "duplicates_removed": 0,
+      "missing_values_resolved": 1983,
+      "missing_values_remaining": 0,
+      "anomalies_detected": 0
+    }
+  },
+  "data_trust_score": 94.9
+}
