@@ -7,12 +7,13 @@ Handles:
 4. Infrastructure amenity boolean normalization and missing attribute resolution.
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any, Tuple
+
 import pandas as pd
-from src.cleaning.ids import normalize_school_id
-from src.cleaning.dates import parse_date
+
 from src.cleaning.booleans import normalize_boolean
-from src.config import logger
+from src.cleaning.dates import parse_date
+from src.cleaning.ids import normalize_school_id
 
 # Verified 1:1 Punjab Administrative Block -> District Map
 BLOCK_TO_DISTRICT_MAP = {

@@ -1,14 +1,14 @@
 # EDUPULSE AI — Phase 2 Data Cleaning & Rescue Summary
-**Execution Timestamp**: `2026-09-11T11:58:42.701126`  
-**Pipeline Runtime**: `1.64s`  
-**Master Data Trust Score**: **94.9 / 100**  
+**Execution Timestamp**: `2026-09-11T12:14:13.396733`  
+**Pipeline Runtime**: `1.68s`  
+**Master Data Trust Score**: **94.6 / 100**  
 
 ---
 
 ## 1. Data Trust Score Composition
 - **Record Trustworthiness Points**: 37.0 / 40.0
 - **Referential Integrity Points**: 30.0 / 30.0
-- **Value Rescue Points**: 20.0 / 20.0
+- **Value Rescue Points**: 19.71398682336182 / 20.0
 - **Anomaly Containment Points**: 7.9 / 10.0
 
 *Formula*: `Score = (TrustedRatio * 40) + ReferentialScore(30) + RescueScore(20) + ContainmentScore(10)`

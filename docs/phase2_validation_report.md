@@ -1,6 +1,6 @@
 # EDUPULSE AI — Phase 2 Data Validation Report
-**Timestamp**: `2026-09-11T11:58:42.701126`  
-**Trust Score**: **94.9 / 100**  
+**Timestamp**: `2026-09-11T12:14:13.396733`  
+**Trust Score**: **94.6 / 100**  
 
 ---
 

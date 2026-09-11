@@ -11,11 +11,14 @@ Handles:
 
 import hashlib
 from typing import Any, Tuple
+
 import pandas as pd
-from src.config import GRADE_MAPPING
-from src.cleaning.ids import normalize_school_id
-from src.cleaning.dates import parse_date
+
 from src.cleaning.booleans import normalize_boolean
+from src.cleaning.dates import parse_date
+from src.cleaning.ids import normalize_school_id
+from src.config import GRADE_MAPPING
+
 
 def normalize_grade(val: Any) -> Tuple[int | None, str]:
     """Normalize Roman or numeric grade to integer 1-10."""

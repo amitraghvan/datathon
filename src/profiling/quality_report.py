@@ -3,7 +3,9 @@
 import json
 from pathlib import Path
 from typing import Any, Dict
+
 from src.config import DOCS_DIR, PROCESSED_DATA_DIR, logger
+
 
 def export_json_summary(audit_data: Dict[str, Any], output_path: Path | None = None) -> Path:
     """Export machine-readable data quality summary JSON."""

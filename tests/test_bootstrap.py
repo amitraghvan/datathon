@@ -1,17 +1,17 @@
 """Bootstrap smoke tests verifying configuration, environment, and raw file availability."""
 
-import pytest
 from src.config import (
-    FILE_SCHOOL_MASTER,
+    BOOLEAN_FALSE_TOKENS,
+    BOOLEAN_TRUE_TOKENS,
     FILE_ATTENDANCE,
     FILE_INFRASTRUCTURE,
     FILE_MDM,
+    FILE_SCHOOL_MASTER,
     FILE_TEST_SCORES,
-    get_raw_filepath,
-    BOOLEAN_TRUE_TOKENS,
-    BOOLEAN_FALSE_TOKENS,
     GRAIN_UNIT_PRICES,
+    get_raw_filepath,
 )
+
 
 def test_source_files_exist():
     """Verify all 5 competition source files are discoverable."""

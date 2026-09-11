@@ -8,8 +8,11 @@ Handles:
 """
 
 from typing import List, Optional, Tuple
+
 import pandas as pd
+
 from src.config import logger
+
 
 def deduplicate_dataframe(
     df: pd.DataFrame,

@@ -1,8 +1,9 @@
 """Unit tests for date parsing and calendar enrichment."""
 
-from datetime import date
 import pytest
-from src.cleaning.dates import parse_date, clean_dates_dataframe
+
+from src.cleaning.dates import clean_dates_dataframe, parse_date
+
 
 @pytest.mark.parametrize(
     "raw_date, expected_iso, expected_fmt",

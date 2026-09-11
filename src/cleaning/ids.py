@@ -7,6 +7,7 @@ Preserves full lineage and auditability.
 
 import re
 from typing import Any, Tuple
+
 import pandas as pd
 
 CANONICAL_ID_REGEX = re.compile(r"^SCH\d{4}$")

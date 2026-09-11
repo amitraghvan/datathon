@@ -1,12 +1,10 @@
 """Unit tests for academic score normalization and subject standardization."""
 
-import pytest
 from src.cleaning.scores import (
     normalize_academic_score,
     standardize_subject,
-    clean_assessment_data,
 )
-import pandas as pd
+
 
 def test_percentage_scales():
     s1, m1, _, lg1 = normalize_academic_score("73.0%", "Percentage")

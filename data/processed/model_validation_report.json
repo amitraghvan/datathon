@@ -1,0 +1,31 @@
+{
+  "build_timestamp": "2026-09-11T06:44:13Z",
+  "elapsed_seconds": 0.19,
+  "database_path": "/Users/amitkumar/DATATHON/data/processed/edupulse.duckdb",
+  "table_counts": {
+    "dim_school": 600,
+    "dim_date": 365,
+    "dim_grade": 10,
+    "dim_subject": 6,
+    "dim_vendor": 4,
+    "dim_grain": 4,
+    "fact_attendance": 19994,
+    "fact_assessment": 8000,
+    "fact_infrastructure": 3000,
+    "fact_procurement": 12000
+  },
+  "view_counts": {
+    "school_performance": 600,
+    "school_welfare": 600,
+    "district_performance": 9,
+    "procurement_summary": 600,
+    "school_data_quality": 600
+  },
+  "foreign_key_orphans": {
+    "fact_attendance": 0,
+    "fact_assessment": 0,
+    "fact_infrastructure": 0,
+    "fact_procurement": 0
+  },
+  "integrity_passed": true
+}

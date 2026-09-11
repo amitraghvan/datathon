@@ -6,15 +6,18 @@ and classifies all data quality issues by severity (CRITICAL, HIGH, MEDIUM, LOW,
 
 import re
 from typing import Any, Dict, List
+
 import pandas as pd
+
+from src.config import logger
 from src.ingestion import (
-    load_school_master,
     load_attendance,
     load_infrastructure,
     load_mdm_procurement,
+    load_school_master,
     load_test_scores,
 )
-from src.config import logger
+
 
 def canonicalize_school_id(val: Any) -> str | None:
     """Normalize any school ID format to canonical SCHxxxx."""
@@ -252,7 +255,7 @@ def run_comprehensive_audit() -> Dict[str, Any]:
     return audit_result
 
 if __name__ == "__main__":
-    from src.profiling.quality_report import generate_markdown_report, export_json_summary
+    from src.profiling.quality_report import export_json_summary, generate_markdown_report
     audit_data = run_comprehensive_audit()
     json_path = export_json_summary(audit_data)
     md_path = generate_markdown_report(audit_data)

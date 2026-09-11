@@ -7,9 +7,18 @@ Exports canonical analytical Parquet files, structured audit logs, and validatio
 
 import json
 import time
-from pathlib import Path
 from typing import Any, Dict, List
+
 import pandas as pd
+
+from src.cleaning import (
+    clean_assessment_data,
+    clean_attendance_data,
+    clean_infrastructure_data,
+    clean_procurement_data,
+    clean_school_master_data,
+    deduplicate_dataframe,
+)
 from src.config import (
     DOCS_DIR,
     PROCESSED_DATA_DIR,
@@ -22,14 +31,7 @@ from src.ingestion import (
     load_school_master,
     load_test_scores,
 )
-from src.cleaning import (
-    clean_assessment_data,
-    clean_attendance_data,
-    clean_infrastructure_data,
-    clean_procurement_data,
-    clean_school_master_data,
-    deduplicate_dataframe,
-)
+
 
 def compute_data_trust_score(summary_stats: Dict[str, Any]) -> Dict[str, Any]:
     """Transparently calculate the Data Trust Score based on measurable quality indicators.
@@ -48,14 +50,15 @@ def compute_data_trust_score(summary_stats: Dict[str, Any]) -> Dict[str, Any]:
 
     trusted_record_ratio = (total_trusted_rows / total_raw_rows) if total_raw_rows > 0 else 0.0
     anomaly_rate = (total_anomalies / total_raw_rows) if total_raw_rows > 0 else 0.0
+    unresolved_ratio = (total_unresolved / total_raw_rows) if total_raw_rows > 0 else 0.0
 
     # Components:
     # 1. Base Integrity (40%): Ratio of trusted records
     score_integrity = trusted_record_ratio * 40.0
     # 2. Key Referential Integrity (30%): 100% matched keys = 30 points
     score_referential = 30.0
-    # 3. Rescue Efficacy (20%): Successfully rescued values / total rescued
-    score_rescue = 20.0
+    # 3. Rescue Efficacy (20%): Successfully rescued values minus unresolved penalty
+    score_rescue = max(0.0, 20.0 - (unresolved_ratio * 50.0))
     # 4. Anomaly Transparency & Quarantine (10%): Penalty for unhandled anomalies
     score_quarantine = max(0.0, 10.0 - (anomaly_rate * 50.0))
 

@@ -1,14 +1,15 @@
 """Unit tests for MDM unit conversion, currency cleaning, and value rescue."""
 
 import pandas as pd
-import pytest
+
 from src.cleaning.units import (
     clean_currency,
+    clean_procurement_data,
     parse_quantity_and_unit,
     standardize_grain_name,
     standardize_vendor,
-    clean_procurement_data,
 )
+
 
 def test_clean_currency():
     assert clean_currency("Rs. 1,600")[0] == 1600.0

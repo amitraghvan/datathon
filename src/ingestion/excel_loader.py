@@ -1,7 +1,9 @@
 """Excel loader for raw Mid-Day Meal (MDM) procurement dataset."""
 
 import pandas as pd
+
 from src.config import FILE_MDM, get_raw_filepath, logger
+
 
 def load_mdm_procurement() -> pd.DataFrame:
     """Load pristine raw MDM procurement data, utilizing calamine engine for performance."""

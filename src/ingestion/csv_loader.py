@@ -1,13 +1,15 @@
 """CSV loaders for raw school master, student attendance, and school infrastructure datasets."""
 
 import pandas as pd
+
 from src.config import (
-    FILE_SCHOOL_MASTER,
     FILE_ATTENDANCE,
     FILE_INFRASTRUCTURE,
+    FILE_SCHOOL_MASTER,
     get_raw_filepath,
     logger,
 )
+
 
 def load_school_master() -> pd.DataFrame:
     """Load pristine raw school master data."""

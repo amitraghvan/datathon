@@ -1,8 +1,11 @@
 """JSON loader for raw standardized test scores dataset."""
 
 import json
+
 import pandas as pd
+
 from src.config import FILE_TEST_SCORES, get_raw_filepath, logger
+
 
 def load_test_scores() -> pd.DataFrame:
     """Load pristine raw standardized test scores records from JSON."""

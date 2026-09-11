@@ -1,8 +1,9 @@
 """Central configuration, constants, and logging setup for EduPulse AI."""
 
-import os
 import logging
+import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()

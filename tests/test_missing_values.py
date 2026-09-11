@@ -1,7 +1,9 @@
 """Unit tests for missing value resolution and district imputation."""
 
 import pandas as pd
-from src.cleaning.missing_values import clean_school_master_data, clean_infrastructure_data
+
+from src.cleaning.missing_values import clean_infrastructure_data, clean_school_master_data
+
 
 def test_district_imputation_from_block():
     raw_df = pd.DataFrame([

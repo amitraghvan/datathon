@@ -1,12 +1,13 @@
 """Unit tests for attendance cleaning and anomaly detection."""
 
 import pandas as pd
-import pytest
+
 from src.cleaning.attendance import (
-    normalize_grade,
-    generate_attendance_surrogate_key,
     clean_attendance_data,
+    generate_attendance_surrogate_key,
+    normalize_grade,
 )
+
 
 def test_normalize_grade():
     assert normalize_grade("I")[0] == 1

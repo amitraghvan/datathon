@@ -1,7 +1,9 @@
 """Unit tests for deduplication and audit logging."""
 
 import pandas as pd
+
 from src.cleaning.duplicates import deduplicate_dataframe
+
 
 def test_deduplicate_exact_rows():
     df = pd.DataFrame([

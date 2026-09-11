@@ -1,8 +1,10 @@
 """Unit tests for school ID normalization."""
 
-import pytest
-from src.cleaning.ids import normalize_school_id, clean_school_ids
 import pandas as pd
+import pytest
+
+from src.cleaning.ids import clean_school_ids, normalize_school_id
+
 
 @pytest.mark.parametrize(
     "raw_input, expected_id, expected_status",

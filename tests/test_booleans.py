@@ -1,8 +1,9 @@
 """Unit tests for boolean normalization."""
 
 import pytest
-from src.cleaning.booleans import normalize_boolean, clean_boolean_series
-import pandas as pd
+
+from src.cleaning.booleans import normalize_boolean
+
 
 @pytest.mark.parametrize(
     "raw_val, expected_clean",
