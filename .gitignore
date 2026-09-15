@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -35,9 +35,8 @@ env/
 .env
 .env.*
 !.env.example
-backend/.env
-frontend/.env*
 !frontend/.env.example
+!backend/.env.example
 
 # Node / Next.js / Frontend Build Artifacts
 node_modules/
