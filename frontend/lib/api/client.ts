@@ -2,7 +2,28 @@
  * Governed API Client for EduPulse AI backend services.
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
+export function getApiBaseUrl(): string {
+  let envUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // Auto-correct common typo (datathon-gaqq -> datathon-qaqq)
+  if (envUrl && envUrl.includes("datathon-gaqq.onrender.com")) {
+    envUrl = envUrl.replace("datathon-gaqq.onrender.com", "datathon-qaqq.onrender.com");
+  }
+
+  // If envUrl is explicitly set to a valid non-localhost URL, use it
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl.replace(/\/+$/, "");
+  }
+
+  // In production browser (e.g. Vercel deployment), always fall back to live Render backend
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+    return "https://datathon-qaqq.onrender.com/api/v1";
+  }
+
+  return (envUrl || "http://localhost:8000/api/v1").replace(/\/+$/, "");
+}
+
+export const API_BASE_URL = getApiBaseUrl();
 
 export class ApiError extends Error {
   code: string;
@@ -23,7 +44,8 @@ export async function fetchApi<T>(
   params?: Record<string, any>,
   options?: RequestInit
 ): Promise<T> {
-  let url = `${API_BASE_URL}${endpoint}`;
+  const baseUrl = getApiBaseUrl();
+  let url = `${baseUrl}${endpoint}`;
 
   if (params) {
     const searchParams = new URLSearchParams();

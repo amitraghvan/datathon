@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { fetchApi } from "@/lib/api/client";
+import { fetchApi, getApiBaseUrl } from "@/lib/api/client";
 import type { AgentQueryResponse } from "@/lib/types";
 import {
   Bot,
@@ -128,7 +128,7 @@ export function GlobalAIChatbot() {
         id: `err_${Date.now()}`,
         role: "assistant",
         content:
-          "⚠️ **Connection Notice:** Unable to reach the EduPulse Decision Intelligence engine. Please verify the backend service is running on `http://localhost:8000/api/v1`.",
+          `⚠️ **Connection Notice:** Unable to reach the EduPulse Decision Intelligence engine. Please verify the backend service is running on \`${getApiBaseUrl()}\`.`,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       };
       setMessages((prev) => [...prev, errorMsg]);

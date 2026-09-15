@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { GlobalFilterBar } from "@/components/filters/global-filter-bar";
 import { useGlobalFilters } from "@/components/filters/filter-context";
 import { useOverview } from "@/lib/api/queries";
+import { getApiBaseUrl } from "@/lib/api/client";
 import { MetricCard } from "@/components/kpi/metric-card";
 import { AlertBanner } from "@/components/kpi/alert-banner";
 import { DistrictRankingChart } from "@/components/charts/district-ranking-chart";
@@ -56,7 +57,7 @@ export default function ExecutiveCommandCenter() {
         {error && (
           <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800">
             <strong>Query Error:</strong> Failed to fetch executive overview data. Check backend connectivity at{" "}
-            <code className="font-mono bg-white border border-rose-200 px-1 py-0.5 rounded">http://localhost:8000/api/v1</code>.
+            <code className="font-mono bg-white border border-rose-200 px-1 py-0.5 rounded">{typeof window !== "undefined" ? getApiBaseUrl() : "API"}</code>.
           </div>
         )}
 
