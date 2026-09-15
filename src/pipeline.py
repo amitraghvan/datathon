@@ -75,6 +75,7 @@ def compute_data_trust_score(summary_stats: Dict[str, Any]) -> Dict[str, Any]:
         "formula": "Score = (TrustedRatio * 40) + ReferentialScore(30) + RescueScore(20) + ContainmentScore(10)",
     }
 
+
 def run_pipeline() -> Dict[str, Any]:
     """Execute the end-to-end cleaning and rescue pipeline."""
     start_time = time.time()
@@ -107,8 +108,12 @@ def run_pipeline() -> Dict[str, Any]:
         "flagged_rows": len(clean_master[clean_master["district"] == "Unknown"]),
         "excluded_rows": 0,
         "duplicates_removed": len(raw_master) - len(dedup_master),
-        "missing_values_resolved": len([a for a in audit_clean_m if a["transformation"] == "IMPUTE_DISTRICT_FROM_BLOCK"]),
-        "missing_values_remaining": len([a for a in audit_clean_m if a["transformation"] == "ASSIGN_UNKNOWN_DISTRICT"]),
+        "missing_values_resolved": len(
+            [a for a in audit_clean_m if a["transformation"] == "IMPUTE_DISTRICT_FROM_BLOCK"]
+        ),
+        "missing_values_remaining": len(
+            [a for a in audit_clean_m if a["transformation"] == "ASSIGN_UNKNOWN_DISTRICT"]
+        ),
         "anomalies_detected": 0,
     }
 
@@ -118,7 +123,10 @@ def run_pipeline() -> Dict[str, Any]:
     logger.info("Step 2: Processing Student Attendance...")
     raw_att = load_attendance()
     dedup_att, audit_dedup_a = deduplicate_dataframe(
-        raw_att, "track4_student_attendance.csv", key_col=None, subset_cols=["school_id", "date", "grade"]
+        raw_att,
+        "track4_student_attendance.csv",
+        key_col=None,
+        subset_cols=["school_id", "date", "grade"],
     )
     all_audit_entries.extend(audit_dedup_a)
 
@@ -136,9 +144,13 @@ def run_pipeline() -> Dict[str, Any]:
         "flagged_rows": int((~clean_att["is_trusted_attendance"]).sum()),
         "excluded_rows": int((~clean_att["is_trusted_attendance"]).sum()),
         "duplicates_removed": len(raw_att) - len(dedup_att),
-        "missing_values_resolved": len([a for a in audit_clean_a if a["transformation"] == "SYNTHESIZE_SURROGATE_KEY"]),
+        "missing_values_resolved": len(
+            [a for a in audit_clean_a if a["transformation"] == "SYNTHESIZE_SURROGATE_KEY"]
+        ),
         "missing_values_remaining": 0,
-        "anomalies_detected": int(clean_att["is_impossible_attendance"].sum() + clean_att["is_proxy_attendance"].sum()),
+        "anomalies_detected": int(
+            clean_att["is_impossible_attendance"].sum() + clean_att["is_proxy_attendance"].sum()
+        ),
     }
 
     # -------------------------------------------------------------
@@ -194,7 +206,9 @@ def run_pipeline() -> Dict[str, Any]:
         "flagged_rows": int(clean_mdm["quality_status"].ne("VALID").sum()),
         "excluded_rows": 0,
         "duplicates_removed": len(raw_mdm) - len(dedup_mdm),
-        "missing_values_resolved": len([a for a in audit_clean_m if "DERIVE" in a["transformation"]]),
+        "missing_values_resolved": len(
+            [a for a in audit_clean_m if "DERIVE" in a["transformation"]]
+        ),
         "missing_values_remaining": int(clean_mdm["quantity_kg"].isna().sum()),
         "anomalies_detected": 0,
     }
@@ -220,10 +234,12 @@ def run_pipeline() -> Dict[str, Any]:
         "raw_rows": len(raw_test),
         "clean_rows": len(clean_test),
         "trusted_rows": int(clean_test["quality_status"].eq("VALID").sum()),
-        "flagged_rows": int(clean_test["is_letter_grade_proxy"].sum()), # Tracked for sensitivity
+        "flagged_rows": int(clean_test["is_letter_grade_proxy"].sum()),  # Tracked for sensitivity
         "excluded_rows": int(clean_test["quality_status"].ne("VALID").sum()),
         "duplicates_removed": len(raw_test) - len(dedup_test),
-        "missing_values_resolved": len([a for a in audit_clean_t if a["transformation"] == "MAP_LETTER_GRADE_PROXY"]),
+        "missing_values_resolved": len(
+            [a for a in audit_clean_t if a["transformation"] == "MAP_LETTER_GRADE_PROXY"]
+        ),
         "missing_values_remaining": 0,
         "anomalies_detected": 0,
     }
@@ -266,8 +282,13 @@ def run_pipeline() -> Dict[str, Any]:
     # Save Phase 2 Validation Reports
     generate_phase2_validation_report(final_report)
 
-    logger.info("Pipeline executed successfully in %s seconds. Trust Score: %s/100", elapsed_time, trust_report["data_trust_score"])
+    logger.info(
+        "Pipeline executed successfully in %s seconds. Trust Score: %s/100",
+        elapsed_time,
+        trust_report["data_trust_score"],
+    )
     return final_report
+
 
 def generate_markdown_summary(final_report: Dict[str, Any]) -> None:
     """Generate docs/cleaning_summary.md executive document."""
@@ -300,21 +321,24 @@ def generate_markdown_summary(final_report: Dict[str, Any]) -> None:
             f"{s['duplicates_removed']:,} | {s['missing_values_resolved']:,} |"
         )
 
-    md.extend([
-        "\n---\n",
-        "## 3. Key Transformation & Rescue Accomplishments",
-        "1. **School ID Canonicalization**: Standardized all variants to `SCHxxxx` with 100% referential integrity across 600 unique schools.",
-        "2. **Date Format Harmonization**: Decoded all 6 formatting patterns across 365 calendar days into ISO `YYYY-MM-DD` and enriched calendar attributes.",
-        "3. **District Imputation**: Imputed 21 missing districts from administrative blocks deterministically; assigned 2 unresolvable records to 'Unknown'.",
-        "4. **Attendance Anomaly Containment**: Flagged 835 impossible records (`present > total`) and 1,011 Sunday proxy records without altering raw student counts.",
-        "5. **MDM Unit Conversion & Price-Based Rescue**: Converted bags, sacks, bori, and grams to standard kg. Derived missing quantities and costs using verified commodity prices (Wheat ₹30, Rice ₹40, Pulses ₹90, Oil ₹120).",
-        "6. **Academic Score Normalization**: Normalized 6 grading scales to 0.0–100.0%. Documented letter grade proxies and enabled sensitivity toggles.",
-        "7. **Audit Lineage**: Exported full decision audit to `data/processed/cleaning_audit.parquet`.",
-    ])
+    md.extend(
+        [
+            "\n---\n",
+            "## 3. Key Transformation & Rescue Accomplishments",
+            "1. **School ID Canonicalization**: Standardized all variants to `SCHxxxx` with 100% referential integrity across 600 unique schools.",
+            "2. **Date Format Harmonization**: Decoded all 6 formatting patterns across 365 calendar days into ISO `YYYY-MM-DD` and enriched calendar attributes.",
+            "3. **District Imputation**: Imputed 21 missing districts from administrative blocks deterministically; assigned 2 unresolvable records to 'Unknown'.",
+            "4. **Attendance Anomaly Containment**: Flagged 835 impossible records (`present > total`) and 1,011 Sunday proxy records without altering raw student counts.",
+            "5. **MDM Unit Conversion & Price-Based Rescue**: Converted bags, sacks, bori, and grams to standard kg. Derived missing quantities and costs using verified commodity prices (Wheat ₹30, Rice ₹40, Pulses ₹90, Oil ₹120).",
+            "6. **Academic Score Normalization**: Normalized 6 grading scales to 0.0–100.0%. Documented letter grade proxies and enabled sensitivity toggles.",
+            "7. **Audit Lineage**: Exported full decision audit to `data/processed/cleaning_audit.parquet`.",
+        ]
+    )
 
     summary_md_path.parent.mkdir(parents=True, exist_ok=True)
     with open(summary_md_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md))
+
 
 def generate_phase2_validation_report(final_report: Dict[str, Any]) -> None:
     """Generate phase2_validation_report.json and phase2_validation_report.md."""
@@ -322,16 +346,56 @@ def generate_phase2_validation_report(final_report: Dict[str, Any]) -> None:
     val_md_path = DOCS_DIR / "phase2_validation_report.md"
 
     checks = [
-        {"check": "Raw Data Immutability", "status": "PASSED", "detail": "All 5 files in data/raw/ remained completely unmodified."},
-        {"check": "Canonical School IDs", "status": "PASSED", "detail": "100% of school IDs match SCHxxxx with 0 orphaned foreign keys."},
-        {"check": "Date Normalization", "status": "PASSED", "detail": "100% of dates parsed to ISO YYYY-MM-DD between 2025-04-01 and 2026-03-31."},
-        {"check": "Multilingual Booleans", "status": "PASSED", "detail": "All boolean fields standardized to TRUE, FALSE, or UNKNOWN (UNKNOWN != FALSE)."},
-        {"check": "Impossible Attendance Flagging", "status": "PASSED", "detail": "835 impossible records flagged with is_impossible_attendance=True and excluded from trusted metrics."},
-        {"check": "Proxy Attendance Fraud Flagging", "status": "PASSED", "detail": "1,011 Sunday 100% records flagged with is_proxy_attendance=True and quarantined."},
-        {"check": "Procurement Unit Standardization", "status": "PASSED", "detail": "All quantities converted to kg; 1,909 missing quantities and 646 missing costs rescued via constant commodity prices."},
-        {"check": "FLN Score Standardization", "status": "PASSED", "detail": "All scores normalized to 0–100%; letter grade proxy flagged for sensitivity analysis."},
-        {"check": "District Imputation", "status": "PASSED", "detail": "21 districts deterministically resolved from block hierarchy; 2 marked Unknown."},
-        {"check": "Audit Lineage Preservation", "status": "PASSED", "detail": "Cleaning audit log contains complete provenance of all modifications."},
+        {
+            "check": "Raw Data Immutability",
+            "status": "PASSED",
+            "detail": "All 5 files in data/raw/ remained completely unmodified.",
+        },
+        {
+            "check": "Canonical School IDs",
+            "status": "PASSED",
+            "detail": "100% of school IDs match SCHxxxx with 0 orphaned foreign keys.",
+        },
+        {
+            "check": "Date Normalization",
+            "status": "PASSED",
+            "detail": "100% of dates parsed to ISO YYYY-MM-DD between 2025-04-01 and 2026-03-31.",
+        },
+        {
+            "check": "Multilingual Booleans",
+            "status": "PASSED",
+            "detail": "All boolean fields standardized to TRUE, FALSE, or UNKNOWN (UNKNOWN != FALSE).",
+        },
+        {
+            "check": "Impossible Attendance Flagging",
+            "status": "PASSED",
+            "detail": "835 impossible records flagged with is_impossible_attendance=True and excluded from trusted metrics.",
+        },
+        {
+            "check": "Proxy Attendance Fraud Flagging",
+            "status": "PASSED",
+            "detail": "1,011 Sunday 100% records flagged with is_proxy_attendance=True and quarantined.",
+        },
+        {
+            "check": "Procurement Unit Standardization",
+            "status": "PASSED",
+            "detail": "All quantities converted to kg; 1,909 missing quantities and 646 missing costs rescued via constant commodity prices.",
+        },
+        {
+            "check": "FLN Score Standardization",
+            "status": "PASSED",
+            "detail": "All scores normalized to 0–100%; letter grade proxy flagged for sensitivity analysis.",
+        },
+        {
+            "check": "District Imputation",
+            "status": "PASSED",
+            "detail": "21 districts deterministically resolved from block hierarchy; 2 marked Unknown.",
+        },
+        {
+            "check": "Audit Lineage Preservation",
+            "status": "PASSED",
+            "detail": "Cleaning audit log contains complete provenance of all modifications.",
+        },
     ]
 
     val_data = {
@@ -358,6 +422,7 @@ def generate_phase2_validation_report(final_report: Dict[str, Any]) -> None:
 
     with open(val_md_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md))
+
 
 if __name__ == "__main__":
     run_pipeline()

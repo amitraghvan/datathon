@@ -32,6 +32,7 @@ def test_normalize_school_id(raw_input, expected_id, expected_status):
     assert status == expected_status
     assert isinstance(reason, str)
 
+
 def test_clean_school_ids_dataframe():
     series = pd.Series(["SCH0050", "sch_0054", "SCH-0596", None])
     df_clean = clean_school_ids(series)

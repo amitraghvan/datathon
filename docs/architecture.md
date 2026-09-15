@@ -59,7 +59,19 @@ flowchart TD
             V3{{district_performance}}
             V4{{procurement_summary}}
             V5{{school_data_quality}}
+            V6{{school_risk}}
+            V7{{school_intervention_priority}}
+            V8{{school_welfare_gap}}
+            V9{{district_risk_summary}}
+            V10{{procurement_anomalies}}
         end
+    end
+
+    subgraph Phase 4 Analytics & Risk Engine (src/analytics/)
+        A1_R[Risk Engine - 45% Att / 35% Acad / 20% Infra]
+        A2_W[Welfare Gap Matrix - 2x2 Model/Resilient]
+        A3_K[School Segmentation - K-Means K=4]
+        A4_S[Sensitivity Engine - Weights & Proxies]
     end
 
     subgraph Consumption Layer (Future Phases)
@@ -78,10 +90,11 @@ flowchart TD
     P1 & P2 & P3 & P4 & P5 --> D1 & D2 & D3 & D4 & D5 & D6
     P1 & P2 & P3 & P4 & P5 --> F1 & F2 & F3 & F4
 
-    D1 & D2 & D3 & D4 & D5 & D6 --> V1 & V2 & V3 & V4 & V5
-    F1 & F2 & F3 & F4 --> V1 & V2 & V3 & V4 & V5
+    D1 & D2 & D3 & D4 & D5 & D6 --> V1 & V2 & V3 & V4 & V5 & V6 & V7 & V8 & V9 & V10
+    F1 & F2 & F3 & F4 --> V1 & V2 & V3 & V4 & V5 & V6 & V7 & V8 & V9 & V10
 
-    V1 & V2 & V3 & V4 & V5 --> UI & AI
+    V1 & V2 & V3 & V4 & V5 & V6 & V7 & V8 & V9 & V10 --> A1_R & A2_W & A3_K & A4_S
+    A1_R & A2_W & A3_K & A4_S --> UI & AI
 ```
 
 ---
@@ -125,6 +138,16 @@ flowchart TD
    - Aggregates expenditure, commodity volume, cost per student, and cost per kg with safe division by zero.
 5. **`school_data_quality`**:
    - Multi-domain trust matrix tracking trusted, flagged, and excluded records per school.
+6. **`school_risk`**:
+   - Computes attendance risk (45%), academic risk (35%), infrastructure risk (20%), composite risk score, and risk bands.
+7. **`school_intervention_priority`**:
+   - Synthesizes risk severity (60%), district deficit penalty (20%), multi-factor vulnerability (10%), and coverage confidence (10%) into deterministic intervention ranking.
+8. **`school_welfare_gap`**:
+   - Classifies schools into 2x2 matrix: Model, Resilient, Academic Intervention, Critical Intervention.
+9. **`district_risk_summary`**:
+   - High-level leadership intelligence for cross-district intervention allocation.
+10. **`procurement_anomalies`**:
+    - Flags spend per student and commodity mix outliers using peer IQR benchmarks.
 
 ---
 
@@ -133,3 +156,13 @@ flowchart TD
 - **Dual-Engine Model**:
   - **Parquet**: Immutable, columnar, compressed analytical layer for long-term auditability and portable distribution.
   - **DuckDB**: In-process, vectorized SQL query engine executing analytical views and ad-hoc aggregations in sub-second runtimes ($< 200\text{ms}$).
+
+---
+
+## 5. Phase 4 Analytics & Risk Engine
+
+- **`src/analytics/risk.py`**: Multi-factor Retention Risk Proxy and Intervention Priority scoring engine with dynamic weight re-normalization.
+- **`src/analytics/advanced.py`**: Parametric/non-parametric association analysis (strictly non-causal), 2x2 Welfare Gap Matrix, policy weight sensitivity, letter-grade proxy robustness, and procurement IQR outlier detection.
+- **`src/analytics/segmentation.py`**: Unsupervised K-Means clustering ($K=4$, $\text{Silhouette}=0.216$) with interpretable educational profile labeling.
+- **`src/analytics/pipeline.py`**: Analytical mart materializer exporting Parquet datasets and DuckDB tables.
+

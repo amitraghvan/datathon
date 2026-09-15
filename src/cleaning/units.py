@@ -34,6 +34,7 @@ VENDOR_ID_MAP = {
     "Goyal Rice Mill": "VEN004",
 }
 
+
 def clean_currency(val: Any) -> Tuple[Optional[float], str, str]:
     """Parse messy currency strings to numeric float INR.
 
@@ -68,6 +69,7 @@ def clean_currency(val: Any) -> Tuple[Optional[float], str, str]:
     except ValueError:
         return None, "INVALID", f"COULD_NOT_PARSE_CURRENCY: {s}"
 
+
 def standardize_grain_name(val: Any) -> Tuple[str, str]:
     """Map raw grain string to canonical commodity."""
     if pd.isna(val):
@@ -77,6 +79,7 @@ def standardize_grain_name(val: Any) -> Tuple[str, str]:
         return GRAIN_TYPE_MAPPING[s], "MAPPED_CANONICAL_GRAIN"
     return str(val).strip().title(), "UNMAPPED_GRAIN_TITLECASED"
 
+
 def standardize_vendor(val: Any) -> Tuple[str, str, str]:
     """Map raw vendor name to canonical vendor entity and vendor_id."""
     if pd.isna(val):
@@ -85,6 +88,7 @@ def standardize_vendor(val: Any) -> Tuple[str, str, str]:
     canon_name = VENDOR_MAPPING.get(s, str(val).strip().title())
     vendor_id = VENDOR_ID_MAP.get(canon_name, "VEN999")
     return canon_name, vendor_id, "RESOLVED_VENDOR_ENTITY"
+
 
 def parse_quantity_and_unit(qty_raw: Any, unit_raw: Any) -> Tuple[Optional[float], str, str, str]:
     """Extract numeric quantity in kg and standard unit.
@@ -141,6 +145,7 @@ def parse_quantity_and_unit(qty_raw: Any, unit_raw: Any) -> Tuple[Optional[float
     if qty_num is not None:
         return qty_num, detected_unit, "CONVERTED", conversion_reason
     return None, "kg", "MISSING", "QUANTITY_IS_NULL"
+
 
 def clean_procurement_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict]]:
     """Execute complete traceable procurement cleaning, value rescue, and entity mapping.
@@ -209,36 +214,40 @@ def clean_procurement_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dic
             derived_q = round(c / price, 2)
             df.at[idx, "quantity_kg"] = derived_q
             q_method = "DERIVED_FROM_COST"
-            audit_entries.append({
-                "dataset": "track4_mid_day_meal_procurement.xlsx",
-                "record_id": proc_id,
-                "field_name": "quantity_kg",
-                "raw_value": None,
-                "clean_value": derived_q,
-                "transformation": "DERIVE_QUANTITY_FROM_COST",
-                "rule": f"quantity_kg = total_cost ({c}) / price_per_kg ({price})",
-                "status": "RESCUED",
-                "quality_flag": "QTY_DERIVED_FROM_COST",
-                "reason": "Quantity was missing; mathematically derived from standard commodity unit price.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_mid_day_meal_procurement.xlsx",
+                    "record_id": proc_id,
+                    "field_name": "quantity_kg",
+                    "raw_value": None,
+                    "clean_value": derived_q,
+                    "transformation": "DERIVE_QUANTITY_FROM_COST",
+                    "rule": f"quantity_kg = total_cost ({c}) / price_per_kg ({price})",
+                    "status": "RESCUED",
+                    "quality_flag": "QTY_DERIVED_FROM_COST",
+                    "reason": "Quantity was missing; mathematically derived from standard commodity unit price.",
+                }
+            )
 
         # Case 2: Missing cost but valid quantity and price
         elif pd.isna(c) and pd.notna(q) and price and price > 0:
             derived_c = round(q * price, 2)
             df.at[idx, "total_cost"] = derived_c
             c_method = "DERIVED_FROM_QUANTITY"
-            audit_entries.append({
-                "dataset": "track4_mid_day_meal_procurement.xlsx",
-                "record_id": proc_id,
-                "field_name": "total_cost",
-                "raw_value": None,
-                "clean_value": derived_c,
-                "transformation": "DERIVE_COST_FROM_QUANTITY",
-                "rule": f"total_cost = quantity_kg ({q}) * price_per_kg ({price})",
-                "status": "RESCUED",
-                "quality_flag": "COST_DERIVED_FROM_QTY",
-                "reason": "Total cost was missing; mathematically derived from standard commodity unit price.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_mid_day_meal_procurement.xlsx",
+                    "record_id": proc_id,
+                    "field_name": "total_cost",
+                    "raw_value": None,
+                    "clean_value": derived_c,
+                    "transformation": "DERIVE_COST_FROM_QUANTITY",
+                    "rule": f"total_cost = quantity_kg ({q}) * price_per_kg ({price})",
+                    "status": "RESCUED",
+                    "quality_flag": "COST_DERIVED_FROM_QTY",
+                    "reason": "Total cost was missing; mathematically derived from standard commodity unit price.",
+                }
+            )
 
         quantity_rescue_methods.append(q_method)
         cost_rescue_methods.append(c_method)

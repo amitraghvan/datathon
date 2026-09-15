@@ -39,6 +39,7 @@ def normalize_boolean(val: Any) -> Tuple[str, str, str]:
 
     return "UNKNOWN", "UNRECOGNIZED_TOKEN", f"UNRECOGNIZED_BOOLEAN_STRING: {s}"
 
+
 def clean_boolean_series(series: pd.Series, field_prefix: str = "bool") -> pd.DataFrame:
     """Normalize a pandas Series of boolean-like strings with lineage tracking.
 
@@ -52,10 +53,12 @@ def clean_boolean_series(series: pd.Series, field_prefix: str = "bool") -> pd.Da
     records = []
     for val in series:
         canon, status, flag = normalize_boolean(val)
-        records.append({
-            f"{field_prefix}_raw": val,
-            f"{field_prefix}_clean": canon,
-            f"{field_prefix}_status": status,
-            f"{field_prefix}_flag": flag,
-        })
+        records.append(
+            {
+                f"{field_prefix}_raw": val,
+                f"{field_prefix}_clean": canon,
+                f"{field_prefix}_status": status,
+                f"{field_prefix}_flag": flag,
+            }
+        )
     return pd.DataFrame(records)

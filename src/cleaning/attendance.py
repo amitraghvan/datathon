@@ -31,11 +31,13 @@ def normalize_grade(val: Any) -> Tuple[int | None, str]:
         return int(s), "NUMERIC_GRADE"
     return None, f"UNRECOGNIZED_GRADE: {s}"
 
+
 def generate_attendance_surrogate_key(school_id: str, date_iso: str, grade: int) -> str:
     """Generate deterministic surrogate key for missing attendance record_ids."""
     payload = f"{school_id}_{date_iso}_{grade}"
     digest = hashlib.md5(payload.encode("utf-8")).hexdigest()[:8].upper()
     return f"ATT_{digest}"
+
 
 def clean_attendance_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict]]:
     """Clean attendance dataframe, flag anomalies, and produce audit records.
@@ -77,18 +79,20 @@ def clean_attendance_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
             gr = row["grade_number"] or 0
             surr_id = generate_attendance_surrogate_key(sid, dt, gr)
             surrogates.append(surr_id)
-            audit_entries.append({
-                "dataset": "track4_student_attendance.csv",
-                "record_id": surr_id,
-                "field_name": "record_id",
-                "raw_value": None,
-                "clean_value": surr_id,
-                "transformation": "SYNTHESIZE_SURROGATE_KEY",
-                "rule": "MD5(school_id + date + grade)[:8]",
-                "status": "RESCUED",
-                "quality_flag": "ATT_SURROGATE_KEY_GENERATED",
-                "reason": "Source record_id was missing or null.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_student_attendance.csv",
+                    "record_id": surr_id,
+                    "field_name": "record_id",
+                    "raw_value": None,
+                    "clean_value": surr_id,
+                    "transformation": "SYNTHESIZE_SURROGATE_KEY",
+                    "rule": "MD5(school_id + date + grade)[:8]",
+                    "status": "RESCUED",
+                    "quality_flag": "ATT_SURROGATE_KEY_GENERATED",
+                    "reason": "Source record_id was missing or null.",
+                }
+            )
         else:
             surrogates.append(str(row["record_id"]).strip())
 
@@ -104,8 +108,12 @@ def clean_attendance_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
     df["marked_by"] = df["marked_by"].fillna("Unknown").astype(str).str.strip()
 
     # 7. Student attendance validation & rate calculation
-    df["total_students"] = pd.to_numeric(df["total_students"], errors="coerce").fillna(0).astype(int)
-    df["present_students"] = pd.to_numeric(df["present_students"], errors="coerce").fillna(0).astype(int)
+    df["total_students"] = (
+        pd.to_numeric(df["total_students"], errors="coerce").fillna(0).astype(int)
+    )
+    df["present_students"] = (
+        pd.to_numeric(df["present_students"], errors="coerce").fillna(0).astype(int)
+    )
 
     # Calculate attendance rate
     # Prevent division by zero: if total_students <= 0, rate is null
@@ -119,7 +127,11 @@ def clean_attendance_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
     df["is_impossible_attendance"] = df["present_students"] > df["total_students"]
 
     # B. Proxy attendance fraud (100% attendance on Sunday)
-    df["is_proxy_attendance"] = df["is_sunday"] & (df["present_students"] == df["total_students"]) & (df["total_students"] > 0)
+    df["is_proxy_attendance"] = (
+        df["is_sunday"]
+        & (df["present_students"] == df["total_students"])
+        & (df["total_students"] > 0)
+    )
 
     # 9. Quality status and trust classification
     quality_status = []
@@ -130,33 +142,37 @@ def clean_attendance_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
         reasons = []
         if row["is_impossible_attendance"]:
             reasons.append("PRESENT_STUDENTS_EXCEEDS_TOTAL")
-            audit_entries.append({
-                "dataset": "track4_student_attendance.csv",
-                "record_id": row["record_id"],
-                "field_name": "present_students",
-                "raw_value": row["present_students"],
-                "clean_value": row["present_students"],
-                "transformation": "FLAG_IMPOSSIBLE_RECORD",
-                "rule": "present_students <= total_students",
-                "status": "FLAGGED",
-                "quality_flag": "ERR_ATT_PRESENT_GT_TOTAL",
-                "reason": f"Present ({row['present_students']}) exceeds total ({row['total_students']}).",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_student_attendance.csv",
+                    "record_id": row["record_id"],
+                    "field_name": "present_students",
+                    "raw_value": row["present_students"],
+                    "clean_value": row["present_students"],
+                    "transformation": "FLAG_IMPOSSIBLE_RECORD",
+                    "rule": "present_students <= total_students",
+                    "status": "FLAGGED",
+                    "quality_flag": "ERR_ATT_PRESENT_GT_TOTAL",
+                    "reason": f"Present ({row['present_students']}) exceeds total ({row['total_students']}).",
+                }
+            )
 
         if row["is_proxy_attendance"]:
             reasons.append("100_PCT_ATTENDANCE_ON_SUNDAY")
-            audit_entries.append({
-                "dataset": "track4_student_attendance.csv",
-                "record_id": row["record_id"],
-                "field_name": "date / present_students",
-                "raw_value": f"{row['present_students']}/{row['total_students']}",
-                "clean_value": f"{row['present_students']}/{row['total_students']}",
-                "transformation": "FLAG_PROXY_FRAUD",
-                "rule": "100% attendance on Sunday",
-                "status": "FLAGGED",
-                "quality_flag": "WARN_ATT_SUNDAY_PROXY",
-                "reason": f"Sunday attendance recorded as exactly 100% ({row['present_students']}/{row['total_students']}).",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_student_attendance.csv",
+                    "record_id": row["record_id"],
+                    "field_name": "date / present_students",
+                    "raw_value": f"{row['present_students']}/{row['total_students']}",
+                    "clean_value": f"{row['present_students']}/{row['total_students']}",
+                    "transformation": "FLAG_PROXY_FRAUD",
+                    "rule": "100% attendance on Sunday",
+                    "status": "FLAGGED",
+                    "quality_flag": "WARN_ATT_SUNDAY_PROXY",
+                    "reason": f"Sunday attendance recorded as exactly 100% ({row['present_students']}/{row['total_students']}).",
+                }
+            )
 
         if reasons:
             anomaly_reasons.append("; ".join(reasons))

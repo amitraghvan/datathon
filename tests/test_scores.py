@@ -18,6 +18,7 @@ def test_percentage_scales():
     s3, m3, _, _ = normalize_academic_score("89.3%", "%")
     assert s3 == 89.3
 
+
 def test_cgpa_scale():
     s1, m1, _, lg1 = normalize_academic_score("7.7", "CGPA", 10)
     assert s1 == 77.0
@@ -26,6 +27,7 @@ def test_cgpa_scale():
 
     s2, _, _, _ = normalize_academic_score("4.8", "CGPA", 10)
     assert s2 == 48.0
+
 
 def test_raw_marks_scale():
     s1, m1, _, lg1 = normalize_academic_score("21.6/50", "Raw Marks")
@@ -36,6 +38,7 @@ def test_raw_marks_scale():
     s2, _, _, _ = normalize_academic_score("16.0/25", "Raw Marks")
     assert s2 == 64.0
 
+
 def test_letter_grade_proxy():
     grades = {"A+": 95.0, "A": 85.0, "B": 75.0, "C": 65.0, "D": 50.0, "E": 35.0}
     for g, exp in grades.items():
@@ -43,6 +46,7 @@ def test_letter_grade_proxy():
         assert s == exp
         assert m == "LETTER_GRADE_PROXY"
         assert is_lg is True
+
 
 def test_subject_standardization():
     assert standardize_subject("Ganit")[0] == "Mathematics"

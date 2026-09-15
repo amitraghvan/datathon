@@ -40,6 +40,7 @@ FILE_INFRASTRUCTURE = "track4_school_infrastructure.csv"
 FILE_MDM = "track4_mid_day_meal_procurement.xlsx"
 FILE_TEST_SCORES = "track4_test_scores.json"
 
+
 def get_raw_filepath(filename: str) -> Path:
     """Resolve file path prioritizing data/raw/, falling back to workspace root."""
     raw_path = RAW_DATA_DIR / filename
@@ -50,26 +51,56 @@ def get_raw_filepath(filename: str) -> Path:
         return root_path
     raise FileNotFoundError(f"Source file {filename} not found in {RAW_DATA_DIR} or {BASE_DIR}")
 
+
 # Boolean Token Standardization
 BOOLEAN_TRUE_TOKENS = {
-    "true", "1", "yes", "y", "hai", "haan", "h", "functional", "working", "available"
+    "true",
+    "1",
+    "yes",
+    "y",
+    "hai",
+    "haan",
+    "h",
+    "functional",
+    "working",
+    "available",
 }
 BOOLEAN_FALSE_TOKENS = {
-    "false", "0", "no", "n", "nahi", "nahi hai", "na", "kharab", "broken", "under repair", "not available"
+    "false",
+    "0",
+    "no",
+    "n",
+    "nahi",
+    "nahi hai",
+    "na",
+    "kharab",
+    "broken",
+    "under repair",
+    "not available",
 }
 
 # Grade Normalization (Roman Numerals & Strings to Integer)
 GRADE_MAPPING = {
-    "I": 1, "1": 1,
-    "II": 2, "2": 2,
-    "III": 3, "3": 3,
-    "IV": 4, "4": 4,
-    "V": 5, "5": 5,
-    "VI": 6, "6": 6,
-    "VII": 7, "7": 7,
-    "VIII": 8, "8": 8,
-    "IX": 9, "9": 9,
-    "X": 10, "10": 10,
+    "I": 1,
+    "1": 1,
+    "II": 2,
+    "2": 2,
+    "III": 3,
+    "3": 3,
+    "IV": 4,
+    "4": 4,
+    "V": 5,
+    "5": 5,
+    "VI": 6,
+    "6": 6,
+    "VII": 7,
+    "7": 7,
+    "VIII": 8,
+    "8": 8,
+    "IX": 9,
+    "9": 9,
+    "X": 10,
+    "10": 10,
 }
 
 # Standardized Academic Subjects

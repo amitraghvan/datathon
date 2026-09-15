@@ -30,6 +30,7 @@ def standardize_subject(val: Any) -> Tuple[str, str]:
         return SUBJECT_MAPPING[s], "MAPPED_CANONICAL_SUBJECT"
     return str(val).strip().title(), "UNMAPPED_SUBJECT_TITLECASED"
 
+
 def normalize_academic_score(
     score_val: Any,
     scale_val: Any,
@@ -84,7 +85,11 @@ def normalize_academic_score(
         # Fallback to max_marks column
         try:
             num = float(score_str)
-            den = float(max_marks_val) if pd.notna(max_marks_val) and float(max_marks_val) > 0 else 100.0
+            den = (
+                float(max_marks_val)
+                if pd.notna(max_marks_val) and float(max_marks_val) > 0
+                else 100.0
+            )
             score = round((num / den) * 100.0, 2)
             if 0.0 <= score <= 100.0:
                 return score, "RAW_MARKS_TO_PERCENT", "SCORE_DIVIDED_BY_MAX_MARKS", False
@@ -106,6 +111,7 @@ def normalize_academic_score(
         return None, "LETTER_GRADE_PROXY", f"UNRECOGNIZED_LETTER_GRADE: {grade_clean}", True
 
     return None, "UNKNOWN_SCALE", f"UNSUPPORTED_SCALE: {scale_str}", False
+
 
 def clean_assessment_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict]]:
     """Clean assessment dataframe, normalize scores, map subjects, and produce audit records.
@@ -159,18 +165,20 @@ def clean_assessment_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
         is_letter_grades.append(is_lg)
 
         if is_lg:
-            audit_entries.append({
-                "dataset": "track4_test_scores.json",
-                "record_id": str(row.get("assessment_id", f"TST_{idx}")),
-                "field_name": "avg_score",
-                "raw_value": str(row["avg_score"]),
-                "clean_value": score_val,
-                "transformation": "MAP_LETTER_GRADE_PROXY",
-                "rule": f"{row['avg_score']} -> {score_val}% analytical midpoint",
-                "status": "RESCUED",
-                "quality_flag": "SCORE_LETTER_GRADE_PROXY",
-                "reason": "Letter grade mapped to analytical mid-point proxy for cross-sectional comparison.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_test_scores.json",
+                    "record_id": str(row.get("assessment_id", f"TST_{idx}")),
+                    "field_name": "avg_score",
+                    "raw_value": str(row["avg_score"]),
+                    "clean_value": score_val,
+                    "transformation": "MAP_LETTER_GRADE_PROXY",
+                    "rule": f"{row['avg_score']} -> {score_val}% analytical midpoint",
+                    "status": "RESCUED",
+                    "quality_flag": "SCORE_LETTER_GRADE_PROXY",
+                    "reason": "Letter grade mapped to analytical mid-point proxy for cross-sectional comparison.",
+                }
+            )
 
     df["normalized_score_pct"] = norm_scores
     df["score_normalization_method"] = norm_methods
@@ -179,8 +187,7 @@ def clean_assessment_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict
 
     # 6. Quality status
     df["quality_status"] = [
-        "VALID" if pd.notna(s) else "INVALID_SCORE"
-        for s in df["normalized_score_pct"]
+        "VALID" if pd.notna(s) else "INVALID_SCORE" for s in df["normalized_score_pct"]
     ]
 
     final_cols = [

@@ -17,6 +17,7 @@ from src.modeling.database import execute_sql_file, get_db_connection
 SCHEMA_SQL_PATH = BASE_DIR / "src" / "sql" / "schema.sql"
 VIEWS_SQL_PATH = BASE_DIR / "src" / "sql" / "views.sql"
 
+
 def build_canonical_database(db_path: Path | None = None) -> Dict[str, Any]:
     """Execute end-to-end dimensional warehouse build in DuckDB."""
     start_time = time.time()
@@ -49,7 +50,9 @@ def build_canonical_database(db_path: Path | None = None) -> Dict[str, Any]:
         for view_name, p_path in parquet_files.items():
             if not p_path.exists():
                 raise FileNotFoundError(f"Required Parquet file missing: {p_path}")
-            con.execute(f"CREATE OR REPLACE TEMPORARY VIEW {view_name} AS SELECT * FROM read_parquet('{p_path}');")
+            con.execute(
+                f"CREATE OR REPLACE TEMPORARY VIEW {view_name} AS SELECT * FROM read_parquet('{p_path}');"
+            )
 
         # -------------------------------------------------------------
         # 3. POPULATE DIMENSIONS
@@ -292,21 +295,38 @@ def build_canonical_database(db_path: Path | None = None) -> Dict[str, Any]:
             "district_performance",
             "procurement_summary",
             "school_data_quality",
+            "school_risk",
+            "school_intervention_priority",
+            "school_welfare_gap",
+            "district_risk_summary",
+            "procurement_anomalies",
         ]
 
         table_counts = {t: con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in tables}
         view_counts = {v: con.execute(f"SELECT COUNT(*) FROM {v}").fetchone()[0] for v in views}
 
         # Golden Integrity Checks
-        unmatched_att = con.execute("SELECT COUNT(*) FROM fact_attendance f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL").fetchone()[0]
-        unmatched_ass = con.execute("SELECT COUNT(*) FROM fact_assessment f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL").fetchone()[0]
-        unmatched_inf = con.execute("SELECT COUNT(*) FROM fact_infrastructure f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL").fetchone()[0]
-        unmatched_pro = con.execute("SELECT COUNT(*) FROM fact_procurement f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL").fetchone()[0]
+        unmatched_att = con.execute(
+            "SELECT COUNT(*) FROM fact_attendance f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL"
+        ).fetchone()[0]
+        unmatched_ass = con.execute(
+            "SELECT COUNT(*) FROM fact_assessment f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL"
+        ).fetchone()[0]
+        unmatched_inf = con.execute(
+            "SELECT COUNT(*) FROM fact_infrastructure f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL"
+        ).fetchone()[0]
+        unmatched_pro = con.execute(
+            "SELECT COUNT(*) FROM fact_procurement f LEFT JOIN dim_school s ON f.school_key = s.school_key WHERE s.school_key IS NULL"
+        ).fetchone()[0]
 
-        integrity_passed = (unmatched_att == 0 and unmatched_ass == 0 and unmatched_inf == 0 and unmatched_pro == 0)
+        integrity_passed = (
+            unmatched_att == 0 and unmatched_ass == 0 and unmatched_inf == 0 and unmatched_pro == 0
+        )
 
         elapsed = round(time.time() - start_time, 2)
-        logger.info("Database build completed in %ss. Integrity Passed: %s", elapsed, integrity_passed)
+        logger.info(
+            "Database build completed in %ss. Integrity Passed: %s", elapsed, integrity_passed
+        )
 
         report = {
             "build_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -332,6 +352,7 @@ def build_canonical_database(db_path: Path | None = None) -> Dict[str, Any]:
 
     finally:
         con.close()
+
 
 if __name__ == "__main__":
     report = build_canonical_database()

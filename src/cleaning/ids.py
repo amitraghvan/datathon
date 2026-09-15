@@ -12,6 +12,7 @@ import pandas as pd
 
 CANONICAL_ID_REGEX = re.compile(r"^SCH\d{4}$")
 
+
 def normalize_school_id(val: Any) -> Tuple[str | None, str, str]:
     """Normalize a single school ID value.
 
@@ -60,6 +61,7 @@ def normalize_school_id(val: Any) -> Tuple[str | None, str, str]:
 
     return canonical, "NORMALIZED", reason
 
+
 def clean_school_ids(series: pd.Series) -> pd.DataFrame:
     """Vectorized / batch normalization of a school ID Series with lineage.
 
@@ -71,6 +73,8 @@ def clean_school_ids(series: pd.Series) -> pd.DataFrame:
         - id_quality_flag
     """
     results = [normalize_school_id(v) for v in series]
-    df_res = pd.DataFrame(results, columns=["school_id", "id_normalization_status", "id_quality_flag"])
+    df_res = pd.DataFrame(
+        results, columns=["school_id", "id_normalization_status", "id_quality_flag"]
+    )
     df_res["school_id_raw"] = series.values
     return df_res[["school_id_raw", "school_id", "id_normalization_status", "id_quality_flag"]]

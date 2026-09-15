@@ -1,4 +1,8 @@
-# Python
+# ==============================================================================
+# EduPulse AI — Git Ignore Configuration
+# ==============================================================================
+
+# Python & Bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -21,34 +25,55 @@ share/python-wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual Environments
 .venv/
 venv/
 ENV/
 env/
 
-# Environment variables
+# Environment Variables & Secrets (CRITICAL: NEVER COMMIT API KEYS)
 .env
-.env.local
+.env.*
+!.env.example
+backend/.env
+frontend/.env*
+!frontend/.env.example
 
-# IDE
+# Node / Next.js / Frontend Build Artifacts
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/test-results/
+frontend/playwright-report/
+frontend/tsconfig.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vercel/
+
+# IDE & Operating System
+.DS_Store
+Thumbs.db
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Testing & Coverage
+# Testing & Coverage Caches
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 
-# Notebook checkpoints
-.ipynb_checkpoints/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# DuckDB local locks
+# DuckDB Local Locks & WAL
 *.duckdb.tmp
 *.duckdb.wal
+
+# Temporary Scratch Files
+*.tmp
+*.bak
+scratch/

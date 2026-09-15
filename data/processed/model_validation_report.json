@@ -1,7 +1,7 @@
 {
-  "build_timestamp": "2026-09-11T06:44:13Z",
-  "elapsed_seconds": 0.19,
-  "database_path": "/Users/amitkumar/DATATHON/data/processed/edupulse.duckdb",
+  "build_timestamp": "2026-09-15T05:08:56Z",
+  "elapsed_seconds": 0.23,
+  "database_path": "data/processed/edupulse.duckdb",
   "table_counts": {
     "dim_school": 600,
     "dim_date": 365,
@@ -19,7 +19,12 @@
     "school_welfare": 600,
     "district_performance": 9,
     "procurement_summary": 600,
-    "school_data_quality": 600
+    "school_data_quality": 600,
+    "school_risk": 600,
+    "school_intervention_priority": 600,
+    "school_welfare_gap": 600,
+    "district_risk_summary": 9,
+    "procurement_anomalies": 600
   },
   "foreign_key_orphans": {
     "fact_attendance": 0,

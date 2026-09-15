@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-11T11:58:42.701126",
+  "timestamp": "2026-09-11T12:50:02.320821",
   "checks": [
     {
       "check": "Raw Data Immutability",
@@ -109,5 +109,5 @@
       "anomalies_detected": 0
     }
   },
-  "data_trust_score": 94.9
+  "data_trust_score": 94.6
 }

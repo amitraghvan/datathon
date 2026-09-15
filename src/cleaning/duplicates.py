@@ -45,19 +45,23 @@ def deduplicate_dataframe(
             exact_dup_count,
         )
         for idx in df[exact_dup_mask].index:
-            rec_id = str(df.loc[idx, key_col]) if key_col and key_col in df.columns else f"ROW_{idx}"
-            audit_entries.append({
-                "dataset": dataset_name,
-                "record_id": rec_id,
-                "field_name": "ALL",
-                "raw_value": "FULL_ROW_DUPLICATE",
-                "clean_value": "DROPPED_DUPLICATE",
-                "transformation": "REMOVE_EXACT_DUPLICATE",
-                "rule": "Exact identical row matches prior record",
-                "status": "REMOVED",
-                "quality_flag": "DEDUP_EXACT_ROW",
-                "reason": "Redundant identical row removed to prevent aggregate inflation.",
-            })
+            rec_id = (
+                str(df.loc[idx, key_col]) if key_col and key_col in df.columns else f"ROW_{idx}"
+            )
+            audit_entries.append(
+                {
+                    "dataset": dataset_name,
+                    "record_id": rec_id,
+                    "field_name": "ALL",
+                    "raw_value": "FULL_ROW_DUPLICATE",
+                    "clean_value": "DROPPED_DUPLICATE",
+                    "transformation": "REMOVE_EXACT_DUPLICATE",
+                    "rule": "Exact identical row matches prior record",
+                    "status": "REMOVED",
+                    "quality_flag": "DEDUP_EXACT_ROW",
+                    "reason": "Redundant identical row removed to prevent aggregate inflation.",
+                }
+            )
         df_dedup = df[~exact_dup_mask].copy()
     else:
         df_dedup = df.copy()
@@ -76,19 +80,25 @@ def deduplicate_dataframe(
                 target_subset,
             )
             for idx in df_dedup[key_dup_mask].index:
-                rec_id = str(df_dedup.loc[idx, key_col]) if key_col and key_col in df_dedup.columns else f"ROW_{idx}"
-                audit_entries.append({
-                    "dataset": dataset_name,
-                    "record_id": rec_id,
-                    "field_name": str(target_subset),
-                    "raw_value": f"KEY_DUPLICATE_ON_{target_subset}",
-                    "clean_value": "DROPPED_KEY_DUPLICATE",
-                    "transformation": "REMOVE_KEY_DUPLICATE",
-                    "rule": f"Duplicate primary key on {target_subset}",
-                    "status": "REMOVED",
-                    "quality_flag": "DEDUP_KEY_DUPLICATE",
-                    "reason": "Secondary occurrence of unique identifier removed.",
-                })
+                rec_id = (
+                    str(df_dedup.loc[idx, key_col])
+                    if key_col and key_col in df_dedup.columns
+                    else f"ROW_{idx}"
+                )
+                audit_entries.append(
+                    {
+                        "dataset": dataset_name,
+                        "record_id": rec_id,
+                        "field_name": str(target_subset),
+                        "raw_value": f"KEY_DUPLICATE_ON_{target_subset}",
+                        "clean_value": "DROPPED_KEY_DUPLICATE",
+                        "transformation": "REMOVE_KEY_DUPLICATE",
+                        "rule": f"Duplicate primary key on {target_subset}",
+                        "status": "REMOVED",
+                        "quality_flag": "DEDUP_KEY_DUPLICATE",
+                        "reason": "Secondary occurrence of unique identifier removed.",
+                    }
+                )
             df_dedup = df_dedup[~key_dup_mask].copy()
 
     logger.info(

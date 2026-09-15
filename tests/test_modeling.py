@@ -14,6 +14,7 @@ def db_conn():
     yield con
     con.close()
 
+
 def test_dimensions_primary_key_uniqueness(db_conn):
     """Verify primary key uniqueness across all dimensions."""
     dims = [
@@ -26,9 +27,12 @@ def test_dimensions_primary_key_uniqueness(db_conn):
     ]
 
     for table, pk_col, business_key in dims:
-        counts = db_conn.execute(f"SELECT COUNT(*), COUNT(DISTINCT {pk_col}), COUNT(DISTINCT {business_key}) FROM {table}").fetchone()
+        counts = db_conn.execute(
+            f"SELECT COUNT(*), COUNT(DISTINCT {pk_col}), COUNT(DISTINCT {business_key}) FROM {table}"
+        ).fetchone()
         assert counts[0] == counts[1], f"Primary key {pk_col} not unique in {table}"
         assert counts[0] == counts[2], f"Business key {business_key} not unique in {table}"
+
 
 def test_fact_foreign_key_referential_integrity(db_conn):
     """Verify zero orphaned foreign keys in any fact table."""
@@ -68,6 +72,7 @@ def test_fact_foreign_key_referential_integrity(db_conn):
         WHERE s.school_key IS NULL OR d.date_key IS NULL OR v.vendor_key IS NULL OR gr.grain_key IS NULL
     """).fetchone()[0]
     assert orphans_pro == 0, f"Found {orphans_pro} orphaned keys in fact_procurement"
+
 
 def test_golden_value_ranges(db_conn):
     """Verify numerical boundaries and data consistency."""

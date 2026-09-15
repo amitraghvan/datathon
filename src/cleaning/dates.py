@@ -26,6 +26,7 @@ DATE_PATTERNS = [
     ("DD-Mon-YYYY", re.compile(r"^\d{2}-[A-Za-z]{3}-\d{4}$"), "%d-%b-%Y"),
 ]
 
+
 def parse_date(val: Any) -> Tuple[Optional[date], str, str, str]:
     """Parse raw date string into canonical datetime.date.
 
@@ -48,6 +49,7 @@ def parse_date(val: Any) -> Tuple[Optional[date], str, str, str]:
                 return None, "FAILED", fmt_name, f"VALUE_ERROR: {e}"
 
     return None, "FAILED", "UNRECOGNIZED", f"NO_MATCHING_PATTERN: {s}"
+
 
 def clean_dates_dataframe(series: pd.Series) -> pd.DataFrame:
     """Vectorized date normalization returning canonical date and calendar attributes.

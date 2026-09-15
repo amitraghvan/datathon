@@ -104,3 +104,58 @@ To maintain enterprise data trust and consulting-grade defensibility:
 - **Formula**:
   $$\text{Quality Rate} = \frac{\text{Trusted Records (Attendance + Assessment + Procurement)}}{\text{Total Records Processed}} \times 100$$
 - **Source Tables**: `school_data_quality` (View).
+
+---
+
+## 3. Phase 4 Risk Intelligence & Advanced Metric Contracts
+
+### H. Retention Risk Proxy (`risk_score`)
+- **Business Meaning**: Multi-factor institutional vulnerability score (0.0–100.0) reflecting compound deficits in student attendance, academic performance, and school infrastructure.
+- **Formula**:
+  $$\text{Risk Score} = 0.45 \times R_{\text{att}} + 0.35 \times R_{\text{acad}} + 0.20 \times R_{\text{infra}}$$
+  Where $R_i = \max(0.0, \min(100.0, 100.0 - \text{Metric}_i))$.
+- **Source Views / Tables**: `school_risk` (View), `school_risk.parquet`.
+- **Dynamic Re-normalization**: If one component is missing, weights re-normalize over the remaining sum. If $>1$ is missing, score is `NULL` (`INSUFFICIENT_DATA`).
+- **Tiers**: LOW ($0 - 24.9$), MODERATE ($25 - 49.9$), HIGH ($50 - 74.9$), CRITICAL ($75 - 100.0$).
+- **Strict Guardrail**: NOT a verified student dropout prediction; serves as an operational triaging proxy.
+
+---
+
+### I. Intervention Priority Score (`intervention_priority_score`)
+- **Business Meaning**: Operational ranking metric answering which schools require immediate administrative attention and supervisory visits.
+- **Formula**:
+  $$P = \min\left(100.0, (R \times 0.60) + (\min(30.0, D_{\text{penalty}}) \times 0.67) + B_{\text{multi}} + B_{\text{conf}}\right)$$
+  Where $D_{\text{penalty}}$ evaluates negative gaps relative to district peers, $B_{\text{multi}} = 10.0$ for multi-factor vulnerability, and $B_{\text{conf}} = 10.0$ for high coverage.
+- **Source Views / Tables**: `school_intervention_priority` (View), `school_intervention_priority.parquet`.
+- **Ranking**: Deterministic rank `intervention_rank` ordered by Priority Score (DESC), Enrollment (DESC), School ID (ASC).
+
+---
+
+### J. District Benchmark Gaps (`attendance_gap_vs_district`, `academic_gap_vs_district`, `infrastructure_gap_vs_district`)
+- **Business Meaning**: School performance relative to its administrative district peer mean.
+- **Formula**:
+  $$\Delta_{\text{metric}} = \text{School Metric} - \text{District Mean Metric}$$
+- **Source Views / Tables**: `school_intervention_priority` (View), `school_risk.parquet`.
+
+---
+
+### K. Welfare Gap Matrix Quadrants (`welfare_quadrant`)
+- **Business Meaning**: 2x2 categorical matrix classifying schools on physical infrastructure readiness ($\ge 50\%$) vs academic learning score ($\ge 65\%$).
+- **Quadrants**:
+  1. `MODEL`: High Infra $\ge 50\%$, High Acad $\ge 65\%$
+  2. `RESILIENT`: Low Infra $< 50\%$, High Acad $\ge 65\%$
+  3. `ACADEMIC INTERVENTION`: High Infra $\ge 50\%$, Low Acad $< 65\%$
+  4. `CRITICAL INTERVENTION`: Low Infra $< 50\%$, Low Acad $< 65\%$
+- **Source Views / Tables**: `school_welfare_gap` (View), `school_welfare_gap.parquet`.
+
+---
+
+### L. School Cluster Profiles (`cluster_id`, `cluster_name`)
+- **Business Meaning**: Empirical school archetypes derived from standardized K-Means clustering ($K=4$, $\text{Silhouette}=0.216$) across attendance, academics, infrastructure, and procurement spend.
+- **Profiles**:
+  - `0`: Strong Performance & Well Supported
+  - `1`: Academic Support Needed
+  - `2`: Welfare & Infrastructure Constrained
+  - `3`: Multi-Factor Critical Priority
+- **Source Tables**: `school_segmentation` (Table), `school_segmentation.parquet`.
+

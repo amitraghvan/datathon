@@ -51,6 +51,7 @@ BLOCK_TO_DISTRICT_MAP = {
     "Samana": "Patiala",
 }
 
+
 def clean_school_master_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict]]:
     """Clean school master table, impute districts from blocks, and log decisions.
 
@@ -97,33 +98,37 @@ def clean_school_master_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[d
             inferred_dist = BLOCK_TO_DISTRICT_MAP[clean_blk]
             clean_districts.append(inferred_dist)
             imputation_statuses.append("IMPUTED_FROM_BLOCK")
-            audit_entries.append({
-                "dataset": "track4_school_master.csv",
-                "record_id": sid,
-                "field_name": "district",
-                "raw_value": None,
-                "clean_value": inferred_dist,
-                "transformation": "IMPUTE_DISTRICT_FROM_BLOCK",
-                "rule": f"Administrative block '{clean_blk}' maps 1:1 to district '{inferred_dist}'",
-                "status": "IMPUTED",
-                "quality_flag": "DISTRICT_IMPUTED_FROM_BLOCK",
-                "reason": "District was null in master record; deterministically inferred from unique block.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_school_master.csv",
+                    "record_id": sid,
+                    "field_name": "district",
+                    "raw_value": None,
+                    "clean_value": inferred_dist,
+                    "transformation": "IMPUTE_DISTRICT_FROM_BLOCK",
+                    "rule": f"Administrative block '{clean_blk}' maps 1:1 to district '{inferred_dist}'",
+                    "status": "IMPUTED",
+                    "quality_flag": "DISTRICT_IMPUTED_FROM_BLOCK",
+                    "reason": "District was null in master record; deterministically inferred from unique block.",
+                }
+            )
         else:
             clean_districts.append("Unknown")
             imputation_statuses.append("UNRESOLVED")
-            audit_entries.append({
-                "dataset": "track4_school_master.csv",
-                "record_id": sid,
-                "field_name": "district",
-                "raw_value": None,
-                "clean_value": "Unknown",
-                "transformation": "ASSIGN_UNKNOWN_DISTRICT",
-                "rule": "Both district and block missing",
-                "status": "UNRESOLVED",
-                "quality_flag": "DISTRICT_UNRESOLVED",
-                "reason": "Neither district nor administrative block was present in raw source.",
-            })
+            audit_entries.append(
+                {
+                    "dataset": "track4_school_master.csv",
+                    "record_id": sid,
+                    "field_name": "district",
+                    "raw_value": None,
+                    "clean_value": "Unknown",
+                    "transformation": "ASSIGN_UNKNOWN_DISTRICT",
+                    "rule": "Both district and block missing",
+                    "status": "UNRESOLVED",
+                    "quality_flag": "DISTRICT_UNRESOLVED",
+                    "reason": "Neither district nor administrative block was present in raw source.",
+                }
+            )
 
     df["district"] = clean_districts
     df["district_imputation_status"] = imputation_statuses
@@ -168,7 +173,9 @@ def clean_school_master_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[d
     df["medium"] = df["medium"].apply(clean_medium)
 
     # 6. Total enrolled students validation
-    df["total_enrolled_students"] = pd.to_numeric(df["total_enrolled_students"], errors="coerce").fillna(0).astype(int)
+    df["total_enrolled_students"] = (
+        pd.to_numeric(df["total_enrolled_students"], errors="coerce").fillna(0).astype(int)
+    )
 
     final_cols = [
         "school_id",
@@ -188,6 +195,7 @@ def clean_school_master_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[d
     ]
 
     return df[final_cols], audit_entries
+
 
 def clean_infrastructure_data(df_raw: pd.DataFrame) -> Tuple[pd.DataFrame, list[dict]]:
     """Clean school infrastructure table, standardize boolean amenities, and maintain lineage.

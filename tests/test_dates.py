@@ -24,6 +24,7 @@ def test_parse_date_valid(raw_date, expected_iso, expected_fmt):
     assert status == "SUCCESS"
     assert fmt_name == expected_fmt
 
+
 def test_parse_date_invalid_and_missing():
     dt, status, fmt_name, flag = parse_date(None)
     assert dt is None
@@ -33,9 +34,13 @@ def test_parse_date_invalid_and_missing():
     assert dt is None
     assert status == "FAILED"
 
+
 def test_clean_dates_dataframe_calendar_attributes():
     import pandas as pd
-    series = pd.Series(["2025-05-04", "2025-08-30"]) # 2025-05-04 is a Sunday, 2025-08-30 is a Saturday
+
+    series = pd.Series(
+        ["2025-05-04", "2025-08-30"]
+    )  # 2025-05-04 is a Sunday, 2025-08-30 is a Saturday
     df_clean = clean_dates_dataframe(series)
     assert df_clean["date"].tolist() == ["2025-05-04", "2025-08-30"]
     assert df_clean["day_of_week"].tolist() == ["Sunday", "Saturday"]

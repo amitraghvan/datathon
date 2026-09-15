@@ -19,6 +19,7 @@ def load_school_master() -> pd.DataFrame:
     logger.info("Loaded school master: %d rows, %d columns", len(df), len(df.columns))
     return df
 
+
 def load_attendance() -> pd.DataFrame:
     """Load pristine raw student attendance records."""
     fp = get_raw_filepath(FILE_ATTENDANCE)
@@ -26,6 +27,7 @@ def load_attendance() -> pd.DataFrame:
     df = pd.read_csv(fp)
     logger.info("Loaded student attendance: %d rows, %d columns", len(df), len(df.columns))
     return df
+
 
 def load_infrastructure() -> pd.DataFrame:
     """Load pristine raw school infrastructure inspection records."""

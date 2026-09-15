@@ -231,3 +231,204 @@ FROM dim_school s
 LEFT JOIN att_q a ON s.school_id = a.school_id
 LEFT JOIN ass_q sc ON s.school_id = sc.school_id
 LEFT JOIN pro_q p ON s.school_id = p.school_id;
+
+-- ------------------------------------------------------------
+-- VIEW 6: school_risk
+-- Granularity: One row per school
+-- Multi-factor Retention Risk Proxy (45% Att / 35% Acad / 20% Infra)
+-- Enforces: 0-100 normalization, dynamic coverage weighting, deterministic bands
+-- ------------------------------------------------------------
+CREATE OR REPLACE VIEW school_risk AS
+WITH base AS (
+    SELECT
+        p.school_id,
+        p.school_name,
+        p.district,
+        p.block,
+        p.enrollment,
+        p.attendance_rate,
+        p.academic_score,
+        w.infrastructure_readiness_pct,
+        p.quality_coverage_pct,
+        ROUND(GREATEST(0.0, LEAST(100.0, 100.0 - p.attendance_rate)), 1) AS attendance_risk,
+        ROUND(GREATEST(0.0, LEAST(100.0, 100.0 - p.academic_score)), 1) AS academic_risk,
+        ROUND(GREATEST(0.0, LEAST(100.0, 100.0 - w.infrastructure_readiness_pct)), 1) AS infrastructure_risk
+    FROM school_performance p
+    JOIN school_welfare w ON p.school_id = w.school_id
+),
+scored AS (
+    SELECT
+        *,
+        ROUND(0.45 * attendance_risk + 0.35 * academic_risk + 0.20 * infrastructure_risk, 1) AS risk_score,
+        CASE
+            WHEN attendance_risk >= 50.0 AND academic_risk >= 50.0 AND infrastructure_risk >= 50.0 THEN 'MULTI_FACTOR'
+            WHEN attendance_risk >= academic_risk AND attendance_risk >= infrastructure_risk THEN 'ATTENDANCE'
+            WHEN academic_risk >= attendance_risk AND academic_risk >= infrastructure_risk THEN 'ACADEMIC'
+            ELSE 'INFRASTRUCTURE'
+        END AS primary_risk_driver
+    FROM base
+)
+SELECT
+    *,
+    CASE
+        WHEN risk_score >= 75.0 THEN 'CRITICAL'
+        WHEN risk_score >= 50.0 THEN 'HIGH'
+        WHEN risk_score >= 25.0 THEN 'MODERATE'
+        ELSE 'LOW'
+    END AS risk_level
+FROM scored;
+
+-- ------------------------------------------------------------
+-- VIEW 7: school_intervention_priority
+-- Granularity: One row per school
+-- Combines Risk Severity (60%), Peer Deficit (20%), Multi-Factor (10%), Confidence (10%)
+-- Produces deterministic rank ordered by intervention urgency
+-- ------------------------------------------------------------
+CREATE OR REPLACE VIEW school_intervention_priority AS
+WITH base AS (
+    SELECT
+        r.*,
+        d.avg_attendance_rate AS dist_att,
+        d.avg_academic_score AS dist_acad,
+        d.avg_infrastructure_readiness AS dist_infra
+    FROM school_risk r
+    LEFT JOIN district_performance d ON r.district = d.district
+),
+gaps AS (
+    SELECT
+        *,
+        ROUND(attendance_rate - dist_att, 1) AS attendance_gap_vs_district,
+        ROUND(academic_score - dist_acad, 1) AS academic_gap_vs_district,
+        ROUND(infrastructure_readiness_pct - dist_infra, 1) AS infrastructure_gap_vs_district,
+        (
+            CASE WHEN (attendance_rate - dist_att) < 0 THEN ABS(attendance_rate - dist_att) * 0.4 ELSE 0 END +
+            CASE WHEN (academic_score - dist_acad) < 0 THEN ABS(academic_score - dist_acad) * 0.4 ELSE 0 END +
+            CASE WHEN (infrastructure_readiness_pct - dist_infra) < 0 THEN ABS(infrastructure_readiness_pct - dist_infra) * 0.2 ELSE 0 END
+        ) AS deficit_penalty
+    FROM base
+)
+SELECT
+    school_id,
+    school_name,
+    district,
+    block,
+    enrollment,
+    attendance_risk,
+    academic_risk,
+    infrastructure_risk,
+    risk_score,
+    risk_level,
+    primary_risk_driver,
+    attendance_gap_vs_district,
+    academic_gap_vs_district,
+    infrastructure_gap_vs_district,
+    ROUND(
+        LEAST(100.0,
+            (risk_score * 0.60) +
+            (LEAST(30.0, deficit_penalty) * 0.67) +
+            (CASE WHEN primary_risk_driver = 'MULTI_FACTOR' THEN 10.0 ELSE 0.0 END) +
+            (CASE WHEN quality_coverage_pct >= 80.0 THEN 10.0 ELSE 5.0 END)
+        ),
+        1
+    ) AS intervention_priority_score,
+    ROW_NUMBER() OVER(
+        ORDER BY
+            ROUND(LEAST(100.0, (risk_score * 0.60) + (LEAST(30.0, deficit_penalty) * 0.67) + (CASE WHEN primary_risk_driver = 'MULTI_FACTOR' THEN 10.0 ELSE 0.0 END) + (CASE WHEN quality_coverage_pct >= 80.0 THEN 10.0 ELSE 5.0 END)), 1) DESC,
+            enrollment DESC,
+            school_id ASC
+    ) AS intervention_rank
+FROM gaps;
+
+-- ------------------------------------------------------------
+-- VIEW 8: school_welfare_gap
+-- Granularity: One row per school
+-- 2x2 Matrix: Infrastructure Readiness (X) vs Academic Performance (Y)
+-- Quadrants: MODEL, RESILIENT, ACADEMIC INTERVENTION, CRITICAL INTERVENTION
+-- ------------------------------------------------------------
+CREATE OR REPLACE VIEW school_welfare_gap AS
+SELECT
+    p.school_id,
+    p.school_name,
+    p.district,
+    p.block,
+    p.enrollment,
+    p.attendance_rate,
+    p.academic_score,
+    w.infrastructure_readiness_pct,
+    CASE
+        WHEN w.infrastructure_readiness_pct >= 50.0 AND p.academic_score >= 65.0 THEN 'MODEL'
+        WHEN w.infrastructure_readiness_pct < 50.0 AND p.academic_score >= 65.0 THEN 'RESILIENT'
+        WHEN w.infrastructure_readiness_pct >= 50.0 AND p.academic_score < 65.0 THEN 'ACADEMIC INTERVENTION'
+        ELSE 'CRITICAL INTERVENTION'
+    END AS welfare_quadrant,
+    CASE
+        WHEN w.infrastructure_readiness_pct >= 50.0 AND p.academic_score >= 65.0 THEN 'Strong infrastructure support and robust academic learning outcomes'
+        WHEN w.infrastructure_readiness_pct < 50.0 AND p.academic_score >= 65.0 THEN 'High academic outcomes achieved despite significant infrastructure constraints'
+        WHEN w.infrastructure_readiness_pct >= 50.0 AND p.academic_score < 65.0 THEN 'Adequate physical infrastructure present; learning outcomes lag peer benchmarks'
+        ELSE 'Dual deficiency: severely constrained physical infrastructure and low academic scores'
+    END AS quadrant_description
+FROM school_performance p
+JOIN school_welfare w ON p.school_id = w.school_id;
+
+-- ------------------------------------------------------------
+-- VIEW 9: district_risk_summary
+-- Granularity: One row per district
+-- High-level leadership intelligence for cross-district intervention allocation
+-- ------------------------------------------------------------
+CREATE OR REPLACE VIEW district_risk_summary AS
+SELECT
+    district,
+    COUNT(DISTINCT school_id) AS school_count,
+    SUM(enrollment) AS total_enrolled_students,
+    SUM(CASE WHEN risk_level = 'CRITICAL' THEN 1 ELSE 0 END) AS critical_school_count,
+    SUM(CASE WHEN risk_level IN ('CRITICAL', 'HIGH') THEN 1 ELSE 0 END) AS high_priority_school_count,
+    ROUND(SUM(CASE WHEN risk_level IN ('CRITICAL', 'HIGH') THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) AS district_risk_rate_pct,
+    ROUND(AVG(risk_score), 1) AS avg_risk_score,
+    ROUND(AVG(attendance_rate), 2) AS avg_attendance_rate,
+    ROUND(AVG(academic_score), 2) AS avg_academic_score,
+    ROUND(AVG(infrastructure_readiness_pct), 1) AS avg_infrastructure_readiness,
+    ROUND(AVG(quality_coverage_pct), 1) AS data_quality_coverage_pct
+FROM school_risk
+GROUP BY district
+ORDER BY district_risk_rate_pct DESC, avg_risk_score DESC;
+
+-- ------------------------------------------------------------
+-- VIEW 10: procurement_anomalies
+-- Granularity: One row per school
+-- Peer IQR Benchmarked Spend & Volume Anomaly Detection
+-- ------------------------------------------------------------
+CREATE OR REPLACE VIEW procurement_anomalies AS
+WITH stats AS (
+    SELECT
+        QUANTILE_CONT(avg_cost_per_student, 0.25) AS q1,
+        QUANTILE_CONT(avg_cost_per_student, 0.75) AS q3
+    FROM procurement_summary
+),
+cutoffs AS (
+    SELECT
+        q1,
+        q3,
+        (q3 + 1.5 * (q3 - q1)) AS upper_iqr_threshold
+    FROM stats
+)
+SELECT
+    p.school_id,
+    p.school_name,
+    p.district,
+    p.enrollment,
+    p.avg_cost_per_student,
+    p.avg_cost_per_kg,
+    p.total_spend_inr,
+    CASE
+        WHEN p.avg_cost_per_student > c.upper_iqr_threshold THEN TRUE
+        WHEN p.avg_cost_per_kg > 115.0 THEN TRUE
+        ELSE FALSE
+    END AS is_procurement_outlier,
+    CASE
+        WHEN p.avg_cost_per_student > c.upper_iqr_threshold THEN 'Spend per student (₹' || CAST(ROUND(p.avg_cost_per_student, 1) AS VARCHAR) || ') exceeds peer 75th percentile + 1.5 IQR threshold (₹' || CAST(ROUND(c.upper_iqr_threshold, 1) AS VARCHAR) || ')'
+        WHEN p.avg_cost_per_kg > 115.0 THEN 'Average cost per kg (₹' || CAST(ROUND(p.avg_cost_per_kg, 1) AS VARCHAR) || ') is heavily skewed towards high-cost cooking oil relative to peer mix'
+        ELSE 'Within standard peer distribution'
+    END AS procurement_anomaly_reason
+FROM procurement_summary p
+CROSS JOIN cutoffs c;
+

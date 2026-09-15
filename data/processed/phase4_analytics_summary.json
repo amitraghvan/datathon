@@ -1,0 +1,171 @@
+{
+  "timestamp": "2026-09-11T07:20:05Z",
+  "elapsed_seconds": 0.55,
+  "school_count": 600,
+  "risk_distribution": {
+    "MODERATE": 338,
+    "LOW": 262
+  },
+  "primary_drivers_distribution": {
+    "ACADEMIC": 402,
+    "INFRASTRUCTURE": 196,
+    "ATTENDANCE": 2
+  },
+  "top_5_priority_schools": [
+    {
+      "school_id": "SCH0386",
+      "school_name": "Govt. Elementary School Sama",
+      "district": "Moga",
+      "risk_score": 38.4,
+      "intervention_priority_score": 41.1,
+      "primary_risk_driver": "INFRASTRUCTURE",
+      "recommended_intervention": "Preventative monitoring, quarterly academic check-ins, and routine facility audits"
+    },
+    {
+      "school_id": "SCH0126",
+      "school_name": "Govt. Primary School Pillay",
+      "district": "Sangrur",
+      "risk_score": 38.2,
+      "intervention_priority_score": 40.7,
+      "primary_risk_driver": "INFRASTRUCTURE",
+      "recommended_intervention": "Preventative monitoring, quarterly academic check-ins, and routine facility audits"
+    },
+    {
+      "school_id": "SCH0180",
+      "school_name": "Govt. Elementary School Sha",
+      "district": "Moga",
+      "risk_score": 38.0,
+      "intervention_priority_score": 40.7,
+      "primary_risk_driver": "INFRASTRUCTURE",
+      "recommended_intervention": "Preventative monitoring, quarterly academic check-ins, and routine facility audits"
+    },
+    {
+      "school_id": "SCH0467",
+      "school_name": "Govt. Elementary School Krishnan",
+      "district": "Bathinda",
+      "risk_score": 37.6,
+      "intervention_priority_score": 40.4,
+      "primary_risk_driver": "INFRASTRUCTURE",
+      "recommended_intervention": "Preventative monitoring, quarterly academic check-ins, and routine facility audits"
+    },
+    {
+      "school_id": "SCH0212",
+      "school_name": "Govt. Senior Secondary School Sachar",
+      "district": "Moga",
+      "risk_score": 37.0,
+      "intervention_priority_score": 40.1,
+      "primary_risk_driver": "INFRASTRUCTURE",
+      "recommended_intervention": "Preventative monitoring, quarterly academic check-ins, and routine facility audits"
+    }
+  ],
+  "welfare_quadrants_distribution": {
+    "MODEL": 327,
+    "ACADEMIC INTERVENTION": 221,
+    "RESILIENT": 29,
+    "CRITICAL INTERVENTION": 23
+  },
+  "association_analysis": {
+    "sample_size": 600,
+    "pearson_r": -0.007,
+    "spearman_rho": -0.006,
+    "strength": "NEGLIGIBLE",
+    "causal_disclaimer": "Analytical correlation only; does not claim causality."
+  },
+  "segmentation_evaluation": {
+    "k_selected": 4,
+    "silhouette_score": 0.216,
+    "k_candidates_silhouette": {
+      "2": 0.203,
+      "3": 0.232,
+      "4": 0.216,
+      "5": 0.22,
+      "6": 0.208
+    },
+    "cluster_profiles": {
+      "0": {
+        "cluster_id": 0,
+        "cluster_name": "Multi-Factor Critical Priority",
+        "description": "Compound vulnerabilities across low attendance, lagging academics, and poor facilities.",
+        "recommended_policy_action": "Multi-agency emergency taskforce and targeted welfare provisioning.",
+        "centroid_attendance": 79.6,
+        "centroid_academic_score": 65.9,
+        "centroid_infrastructure_readiness": 75.0,
+        "centroid_spend_per_student": 940.4
+      },
+      "1": {
+        "cluster_id": 1,
+        "cluster_name": "Multi-Factor Critical Priority",
+        "description": "Compound vulnerabilities across low attendance, lagging academics, and poor facilities.",
+        "recommended_policy_action": "Multi-agency emergency taskforce and targeted welfare provisioning.",
+        "centroid_attendance": 79.7,
+        "centroid_academic_score": 65.9,
+        "centroid_infrastructure_readiness": 50.0,
+        "centroid_spend_per_student": 214.4
+      },
+      "2": {
+        "cluster_id": 2,
+        "cluster_name": "Academic Support Needed",
+        "description": "Physical infrastructure is adequate, but academic test scores lag behind peers.",
+        "recommended_policy_action": "Pedagogical training, remedial classes, and foundational literacy intervention.",
+        "centroid_attendance": 77.6,
+        "centroid_academic_score": 64.1,
+        "centroid_infrastructure_readiness": 83.3,
+        "centroid_spend_per_student": 231.1
+      },
+      "3": {
+        "cluster_id": 3,
+        "cluster_name": "Strong Performance & Well Supported",
+        "description": "High attendance, robust academic FLN scores, and solid infrastructure.",
+        "recommended_policy_action": "Model school recognition and peer-mentorship lead.",
+        "centroid_attendance": 80.9,
+        "centroid_academic_score": 68.8,
+        "centroid_infrastructure_readiness": 85.3,
+        "centroid_spend_per_student": 211.3
+      }
+    }
+  },
+  "weight_sensitivity": {
+    "overall_stability": "ROBUST",
+    "scenario_evaluations": {
+      "Baseline (45/35/20)": {
+        "top10_overlap_count": 7,
+        "top10_overlap_pct": 70.0,
+        "rank_correlation_with_baseline": 0.962,
+        "critical_count": 0,
+        "stability_status": "MODERATELY_SENSITIVE"
+      },
+      "Infra-Heavy (40/35/25)": {
+        "top10_overlap_count": 9,
+        "top10_overlap_pct": 90.0,
+        "rank_correlation_with_baseline": 0.962,
+        "critical_count": 0,
+        "stability_status": "STABLE"
+      },
+      "Attendance-Heavy (50/30/20)": {
+        "top10_overlap_count": 8,
+        "top10_overlap_pct": 80.0,
+        "rank_correlation_with_baseline": 0.962,
+        "critical_count": 0,
+        "stability_status": "STABLE"
+      },
+      "Academic-Heavy (35/45/20)": {
+        "top10_overlap_count": 8,
+        "top10_overlap_pct": 80.0,
+        "rank_correlation_with_baseline": 0.962,
+        "critical_count": 0,
+        "stability_status": "STABLE"
+      }
+    }
+  },
+  "letter_grade_sensitivity": {
+    "pearson_correlation": 0.858,
+    "spearman_rank_correlation": 0.857,
+    "district_rank_correlation": 0.967,
+    "mean_risk_score_impact": 0.76,
+    "is_stable": true
+  },
+  "procurement_anomalies": {
+    "total_schools_evaluated": 600,
+    "outlier_count": 60
+  }
+}

@@ -1,12 +1,12 @@
 {
-  "pipeline_timestamp": "2026-09-11T11:58:42.701126",
+  "pipeline_timestamp": "2026-09-11T12:50:02.320821",
   "elapsed_seconds": 1.64,
   "trust_score": {
-    "data_trust_score": 94.9,
+    "data_trust_score": 94.6,
     "components": {
       "record_trustworthiness_points": 37.0,
       "referential_integrity_points": 30.0,
-      "value_rescue_points": 20.0,
+      "value_rescue_points": 19.71398682336182,
       "anomaly_containment_points": 7.9
     },
     "formula": "Score = (TrustedRatio * 40) + ReferentialScore(30) + RescueScore(20) + ContainmentScore(10)"

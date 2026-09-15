@@ -19,6 +19,7 @@ def test_clean_currency():
     assert clean_currency("596")[0] == 596.0
     assert clean_currency(None)[0] is None
 
+
 def test_parse_quantity_and_unit():
     # Embedded strings
     q1, u1, _, r1 = parse_quantity_and_unit("14.9 kg", None)
@@ -37,6 +38,7 @@ def test_parse_quantity_and_unit():
     q5, u5, _, _ = parse_quantity_and_unit(1, "Bori")
     assert q5 == 50.0
 
+
 def test_standardize_grain_name():
     assert standardize_grain_name("Chawal")[0] == "Rice"
     assert standardize_grain_name("RICE")[0] == "Rice"
@@ -45,6 +47,7 @@ def test_standardize_grain_name():
     assert standardize_grain_name("Dal")[0] == "Pulses"
     assert standardize_grain_name("Sarson Tel")[0] == "Cooking Oil"
     assert standardize_grain_name("Mustard Oil")[0] == "Cooking Oil"
+
 
 def test_standardize_vendor():
     v1, id1, _ = standardize_vendor("sharma traders pvt ltd")
@@ -55,20 +58,25 @@ def test_standardize_vendor():
     assert v2 == "Kumar Supplies"
     assert id2 == "VEN001"
 
+
 def test_procurement_value_rescue():
     # Test missing quantity derivation via cost / price
     # Cooking Oil price is ₹120/kg. Cost = 1200 => quantity should be 10 kg
-    raw_df = pd.DataFrame([{
-        "procurement_id": "MDM99901",
-        "date": "2025-08-10",
-        "school_id": "SCH0050",
-        "vendor_name": "Sharma Traders",
-        "grain_type": "Cooking Oil",
-        "quantity": None,
-        "unit": None,
-        "total_cost": "Rs. 1,200",
-        "payment_status": "Paid",
-    }])
+    raw_df = pd.DataFrame(
+        [
+            {
+                "procurement_id": "MDM99901",
+                "date": "2025-08-10",
+                "school_id": "SCH0050",
+                "vendor_name": "Sharma Traders",
+                "grain_type": "Cooking Oil",
+                "quantity": None,
+                "unit": None,
+                "total_cost": "Rs. 1,200",
+                "payment_status": "Paid",
+            }
+        ]
+    )
 
     df_clean, audit = clean_procurement_data(raw_df)
     row = df_clean.iloc[0]
@@ -78,17 +86,21 @@ def test_procurement_value_rescue():
 
     # Test missing cost derivation via quantity * price
     # Wheat price is ₹30/kg. Quantity = 50 kg => cost should be ₹1500
-    raw_df2 = pd.DataFrame([{
-        "procurement_id": "MDM99902",
-        "date": "2025-08-10",
-        "school_id": "SCH0050",
-        "vendor_name": "Kumar Supplies",
-        "grain_type": "Wheat",
-        "quantity": 50.0,
-        "unit": "kg",
-        "total_cost": None,
-        "payment_status": "Pending",
-    }])
+    raw_df2 = pd.DataFrame(
+        [
+            {
+                "procurement_id": "MDM99902",
+                "date": "2025-08-10",
+                "school_id": "SCH0050",
+                "vendor_name": "Kumar Supplies",
+                "grain_type": "Wheat",
+                "quantity": 50.0,
+                "unit": "kg",
+                "total_cost": None,
+                "payment_status": "Pending",
+            }
+        ]
+    )
 
     df_clean2, audit2 = clean_procurement_data(raw_df2)
     row2 = df_clean2.iloc[0]

@@ -33,6 +33,7 @@ def test_boolean_true_tokens(raw_val, expected_clean):
     assert clean == expected_clean
     assert "TRUE" in status
 
+
 @pytest.mark.parametrize(
     "raw_val, expected_clean",
     [
@@ -63,6 +64,7 @@ def test_boolean_false_tokens(raw_val, expected_clean):
     clean, status, flag = normalize_boolean(raw_val)
     assert clean == expected_clean
     assert "FALSE" in status
+
 
 @pytest.mark.parametrize(
     "raw_val",
