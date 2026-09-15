@@ -155,52 +155,52 @@ export function GlobalAIChatbot() {
       {/* ── CHAT WINDOW CONTAINER ─────────────────────────────────── */}
       {isOpen && (
         <div
-          className={`pointer-events-auto mb-3 flex flex-col rounded-2xl bg-[#0F172A]/95 border border-[#38BDF8]/30 shadow-2xl shadow-[#0284C7]/25 backdrop-blur-2xl transition-all duration-300 overflow-hidden ${
+          className={`pointer-events-auto mb-3 flex flex-col rounded-2xl bg-white border border-slate-200 shadow-xl transition-all duration-300 overflow-hidden ${
             isExpanded
               ? "w-[92vw] sm:w-[620px] h-[82vh] max-h-[800px]"
               : "w-[92vw] sm:w-[430px] h-[72vh] max-h-[620px]"
           }`}
         >
-          {/* Glassmorphic Header */}
-          <div className="bg-gradient-to-r from-[#1E293B] via-[#0F172A] to-[#1E293B] border-b border-[#2A364F] px-4 py-3 flex items-center justify-between">
+          {/* Header */}
+          <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#0284C7] to-[#6366F1] text-white shadow-md shadow-[#0284C7]/30">
-                <Sparkles className="w-4 h-4 animate-pulse" />
-                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#10B981] ring-2 ring-[#0F172A]" />
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-sky-700 text-white shadow-2xs">
+                <Sparkles className="w-4 h-4" />
+                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white flex items-center gap-1.5 tracking-wide">
+                <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5 tracking-wide">
                   EduPulse AI Copilot
-                  <span className="text-[9px] font-mono font-semibold uppercase px-1.5 py-0.2 rounded bg-[#0284C7]/20 text-[#38BDF8] border border-[#0284C7]/30">
-                    Phase 6
+                  <span className="text-[9px] font-mono font-semibold uppercase px-1.5 py-0.2 rounded bg-sky-50 text-sky-700 border border-sky-200">
+                    Decision AI
                   </span>
                 </div>
-                <div className="text-[10px] text-[#94A3B8] flex items-center gap-1.5">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                <div className="text-[10px] text-slate-500 flex items-center gap-1.5">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
                   DuckDB Verified (94.6% Trust)
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-1 text-[#94A3B8]">
+            <div className="flex items-center gap-1 text-slate-400">
               <button
                 onClick={handleReset}
                 title="Reset session memory"
-                className="p-1.5 hover:text-white hover:bg-[#1E293B] rounded-md transition-colors"
+                className="p-1.5 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 title={isExpanded ? "Collapse" : "Expand"}
-                className="p-1.5 hover:text-white hover:bg-[#1E293B] rounded-md transition-colors hidden sm:block"
+                className="p-1.5 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition-colors hidden sm:block"
               >
                 {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               </button>
               <button
                 onClick={() => setIsOpen(false)}
                 title="Close chat"
-                className="p-1.5 hover:text-white hover:bg-[#1E293B] rounded-md transition-colors"
+                className="p-1.5 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -208,39 +208,39 @@ export function GlobalAIChatbot() {
           </div>
 
           {/* Chat Messages Body */}
-          <div className="flex-1 p-3.5 space-y-3.5 overflow-y-auto bg-gradient-to-b from-[#0B0F19]/90 to-[#0F172A]/90">
+          <div className="flex-1 p-3.5 space-y-3.5 overflow-y-auto bg-[#F8FAFC]">
             {messages.map((m) => {
               const isUser = m.role === "user";
               return (
                 <div key={m.id} className={`flex gap-2.5 ${isUser ? "justify-end" : "justify-start"}`}>
                   {!isUser && (
-                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#0284C7] to-[#3B82F6] flex items-center justify-center text-white shrink-0 mt-0.5 shadow-sm">
+                    <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 border border-sky-200 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
                       <Bot className="w-4 h-4" />
                     </div>
                   )}
 
-                  <div className={`max-w-[85%] space-y-2 ${isUser ? "items-end" : "items-start"}`}>
+                  <div className={`max-w-[85%] space-y-1 ${isUser ? "items-end" : "items-start"}`}>
                     <div
-                      className={`p-3 rounded-2xl text-xs leading-relaxed shadow-md ${
+                      className={`p-3 rounded-2xl text-xs leading-relaxed ${
                         isUser
-                          ? "bg-gradient-to-r from-[#0284C7] to-[#0369A1] text-white rounded-br-sm"
-                          : "bg-[#151D2E] text-[#E2E8F0] border border-[#2A364F] rounded-bl-sm"
+                          ? "bg-sky-700 text-white rounded-br-sm shadow-2xs"
+                          : "bg-white text-slate-900 border border-slate-200 rounded-bl-sm shadow-2xs"
                       }`}
                     >
                       {/* Assistant Metadata Badges */}
                       {!isUser && m.response && (
-                        <div className="flex flex-wrap items-center gap-1.5 mb-2 pb-1.5 border-b border-[#2A364F]/60">
-                          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/30 flex items-center gap-1">
+                        <div className="flex flex-wrap items-center gap-1.5 mb-2 pb-1.5 border-b border-slate-100">
+                          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 flex items-center gap-1">
                             {m.response.reasoning_mode === "llama_3.1" ? (
                               <><Brain className="w-2.5 h-2.5" /> Llama 3.1</>
                             ) : (
                               <><Cpu className="w-2.5 h-2.5" /> Governed SQL</>
                             )}
                           </span>
-                          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-[#0284C7]/20 text-[#38BDF8]">
+                          <span className="text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200">
                             {m.response.intent_type}
                           </span>
-                          <span className="text-[9px] font-mono text-[#64748B]">
+                          <span className="text-[9px] font-mono text-slate-400">
                             {m.response.timings_ms?.total_duration_ms || 0}ms
                           </span>
                         </div>
@@ -250,19 +250,19 @@ export function GlobalAIChatbot() {
 
                       {/* Quick Citation Reference Pill */}
                       {!isUser && m.response && m.response.citations && m.response.citations.length > 0 && (
-                        <div className="mt-2.5 pt-2 border-t border-[#2A364F]/60 flex items-center justify-between text-[10px] text-[#94A3B8]">
-                          <span className="flex items-center gap-1 text-[#38BDF8]">
-                            <Database className="w-3 h-3" />
+                        <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                          <span className="flex items-center gap-1 text-sky-700 font-medium">
+                            <Database className="w-3 h-3 text-sky-600" />
                             {m.response.citations.length} Verified Citations
                           </span>
-                          <span className="font-mono text-[#64748B]">
+                          <span className="font-mono text-slate-400">
                             N = {m.response.evidence_count} rows
                           </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="text-[9px] text-[#64748B] px-1 font-mono">
+                    <div className="text-[9px] text-slate-400 px-1 font-mono">
                       {m.timestamp}
                     </div>
                   </div>
@@ -273,17 +273,17 @@ export function GlobalAIChatbot() {
             {/* Thinking / Stepper Indicator */}
             {isLoading && (
               <div className="flex gap-2.5 justify-start items-start animate-in fade-in duration-200">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#6366F1] flex items-center justify-center text-white shrink-0 mt-0.5 animate-pulse">
-                  <Cpu className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 border border-sky-200 flex items-center justify-center shrink-0 mt-0.5">
+                  <Cpu className="w-4 h-4 animate-pulse" />
                 </div>
-                <div className="bg-[#151D2E] border border-[#38BDF8]/40 rounded-2xl rounded-bl-sm p-3 text-xs text-[#94A3B8] shadow-lg max-w-[85%] space-y-2">
-                  <div className="flex items-center gap-2 text-white font-medium text-[11px]">
-                    <span className="w-2 h-2 rounded-full bg-[#38BDF8] animate-ping" />
+                <div className="bg-white border border-sky-200 rounded-2xl rounded-bl-sm p-3 text-xs text-slate-600 shadow-2xs max-w-[85%] space-y-2">
+                  <div className="flex items-center gap-2 text-slate-900 font-medium text-[11px]">
+                    <span className="w-2 h-2 rounded-full bg-sky-600 animate-ping" />
                     {THINKING_STEPS[thinkingStep]}
                   </div>
-                  <div className="w-full bg-[#0B0F19] rounded-full h-1 overflow-hidden">
+                  <div className="w-full bg-slate-100 rounded-full h-1 overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-[#0284C7] to-[#8B5CF6] h-full transition-all duration-300"
+                      className="bg-sky-600 h-full transition-all duration-300"
                       style={{ width: `${((thinkingStep + 1) / THINKING_STEPS.length) * 100}%` }}
                     />
                   </div>
@@ -295,14 +295,14 @@ export function GlobalAIChatbot() {
           </div>
 
           {/* Quick Demo Prompts Carousel */}
-          <div className="px-3 py-1.5 bg-[#0B0F19]/80 border-t border-[#2A364F] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-            <span className="text-[10px] text-[#64748B] font-semibold uppercase shrink-0">Try:</span>
+          <div className="px-3 py-1.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+            <span className="text-[10px] text-slate-500 font-bold uppercase shrink-0">Try:</span>
             {QUICK_PROMPTS.map((p, i) => (
               <button
                 key={i}
                 onClick={() => handleSend(p)}
                 disabled={isLoading}
-                className="text-[10px] text-[#94A3B8] hover:text-white bg-[#151D2E] hover:bg-[#1E293B] border border-[#2A364F] hover:border-[#38BDF8]/40 px-2 py-0.5 rounded-full shrink-0 transition-colors truncate max-w-[220px]"
+                className="text-[10px] text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full shrink-0 transition-colors truncate max-w-[220px]"
               >
                 {p}
               </button>
@@ -310,7 +310,7 @@ export function GlobalAIChatbot() {
           </div>
 
           {/* Chat Input Field */}
-          <div className="p-3 bg-[#0F172A] border-t border-[#2A364F]">
+          <div className="p-3 bg-white border-t border-slate-200">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -325,22 +325,22 @@ export function GlobalAIChatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about school risk, attendance, or procurement..."
                 disabled={isLoading}
-                className="w-full bg-[#0B0F19] border border-[#2A364F] focus:border-[#0284C7] rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-white placeholder-[#64748B] focus:outline-none transition-colors shadow-inner"
+                className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-sky-600 rounded-lg pl-3 pr-9 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none transition-colors"
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="absolute right-1.5 p-1.5 bg-[#0284C7] hover:bg-[#0369A1] disabled:opacity-40 disabled:hover:bg-[#0284C7] text-white rounded-lg transition-colors shadow-sm"
+                className="absolute right-1 p-1.5 bg-sky-700 hover:bg-sky-800 disabled:opacity-40 text-white rounded-md transition-colors shadow-2xs"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>
             </form>
 
-            <div className="flex items-center justify-between text-[9px] text-[#64748B] mt-2 px-1">
+            <div className="flex items-center justify-between text-[9px] text-slate-400 mt-2 px-1">
               <span>Zero-hallucination DuckDB compilation</span>
               <Link
                 href="/ai-analyst"
-                className="text-[#38BDF8] hover:underline flex items-center gap-0.5 font-medium"
+                className="text-sky-700 hover:underline flex items-center gap-0.5 font-medium"
               >
                 Full Workbench <ArrowUpRight className="w-2.5 h-2.5" />
               </Link>
@@ -353,22 +353,19 @@ export function GlobalAIChatbot() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle AI Decision Assistant"
-        className="pointer-events-auto group relative flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-gradient-to-r from-[#0284C7] via-[#4F46E5] to-[#7C3AED] hover:from-[#0369A1] hover:to-[#6D28D9] text-white font-medium shadow-xl shadow-[#0284C7]/30 hover:shadow-[#0284C7]/50 transition-all duration-300 hover:scale-105 active:scale-95 border border-white/20"
+        className="pointer-events-auto group relative flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-sky-700 hover:bg-sky-800 text-white font-medium shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 border border-sky-600"
       >
-        {/* Pulsing Aura */}
-        <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-[#38BDF8] to-[#818CF8] opacity-50 blur-sm group-hover:opacity-75 animate-pulse transition duration-300 -z-10" />
-
         <div className="relative flex items-center justify-center">
           <Bot className="w-5 h-5 text-white" />
-          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#10B981] ring-2 ring-[#0F172A] animate-ping" />
+          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-sky-700" />
         </div>
 
         <div className="flex flex-col text-left">
           <span className="text-xs font-bold tracking-wide flex items-center gap-1">
             EduPulse AI
-            <Sparkles className="w-3 h-3 text-[#FDE047]" />
+            <Sparkles className="w-3 h-3 text-amber-300" />
           </span>
-          <span className="text-[10px] text-white/80 font-mono -mt-0.5">
+          <span className="text-[10px] text-sky-100 font-mono -mt-0.5">
             Ask Copilot
           </span>
         </div>

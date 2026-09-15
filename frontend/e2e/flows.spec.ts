@@ -11,7 +11,7 @@ test.describe("EduPulse AI Web Platform Critical User Journeys", () => {
 
     // Verify KPI Cards
     await expect(page.getByText("Schools Monitored")).toBeVisible();
-    await expect(page.getByText("Average Attendance")).toBeVisible();
+    await expect(page.getByText("Average Attendance", { exact: true })).toBeVisible();
     await expect(page.getByText("Academic FLN Score", { exact: true })).toBeVisible();
     await expect(page.getByText("Priority Schools", { exact: true })).toBeVisible();
 

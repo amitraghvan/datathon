@@ -43,34 +43,34 @@ const quadrantConfig: Record<
 > = {
   MODEL: {
     name: "Model",
-    color: "#10B981",
-    bgBadge: "bg-emerald-500/10",
-    borderBadge: "border-emerald-500/30",
-    textColor: "text-emerald-400",
+    color: "#059669",
+    bgBadge: "bg-emerald-50",
+    borderBadge: "border-emerald-200",
+    textColor: "text-emerald-700",
     desc: "Infra ≥50% & FLN ≥65%",
   },
   RESILIENT: {
     name: "Resilient",
     color: "#0284C7",
-    bgBadge: "bg-sky-500/10",
-    borderBadge: "border-sky-500/30",
-    textColor: "text-sky-400",
+    bgBadge: "bg-sky-50",
+    borderBadge: "border-sky-200",
+    textColor: "text-sky-700",
     desc: "Infra <50% & FLN ≥65%",
   },
   "ACADEMIC INTERVENTION": {
-    name: "Academic Remedial",
-    color: "#F59E0B",
-    bgBadge: "bg-amber-500/10",
-    borderBadge: "border-amber-500/30",
-    textColor: "text-amber-400",
+    name: "Academic Gap",
+    color: "#D97706",
+    bgBadge: "bg-amber-50",
+    borderBadge: "border-amber-200",
+    textColor: "text-amber-700",
     desc: "Infra ≥50% & FLN <65%",
   },
   "CRITICAL INTERVENTION": {
-    name: "Critical Intervention",
-    color: "#EF4444",
-    bgBadge: "bg-rose-500/10",
-    borderBadge: "border-rose-500/30",
-    textColor: "text-rose-400",
+    name: "Critical Risk",
+    color: "#DC2626",
+    bgBadge: "bg-rose-50",
+    borderBadge: "border-rose-200",
+    textColor: "text-rose-700",
     desc: "Infra <50% & FLN <65%",
   },
 };
@@ -103,40 +103,39 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#151D2E]/95 to-[#0F172A]/95 border border-slate-800/90 hover:border-slate-700/80 rounded-xl p-5 shadow-lg backdrop-blur-md transition-all">
+    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs transition-all">
       {/* Header & Quadrant Filter Pills */}
-      <div className="flex flex-col gap-3 mb-3">
+      <div className="flex flex-col gap-2.5 mb-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <span className="p-1 rounded-md bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+            <span className="p-1 rounded-md bg-slate-100 border border-slate-200 text-slate-700">
               <Grid className="w-3.5 h-3.5" />
             </span>
-            <h2 className="text-sm font-bold text-white tracking-wide">
+            <h2 className="text-sm font-bold text-slate-900 tracking-wide">
               2×2 School Welfare Gap Matrix
             </h2>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Physical infrastructure readiness vs. academic foundational learning score.
           </p>
         </div>
 
-        {/* Quadrant Count Badges */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+        {/* Quadrant Count Badges (Flex-wrap to prevent truncation) */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
           {Object.entries(quadrantConfig).map(([qKey, conf]) => (
             <div
               key={qKey}
-              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-xs ${conf.bgBadge} ${conf.borderBadge}`}
+              title={conf.desc}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs cursor-default transition-colors ${conf.bgBadge} ${conf.borderBadge}`}
             >
-              <div className="flex items-center gap-1.5 truncate">
-                <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: conf.color }}
-                />
-                <span className="font-semibold text-slate-300 truncate text-[11px]">
-                  {conf.name}
-                </span>
-              </div>
-              <span className={`font-black text-xs shrink-0 ml-1 ${conf.textColor}`}>
+              <span
+                className="w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: conf.color }}
+              />
+              <span className="font-semibold text-slate-700 text-[11px] whitespace-nowrap">
+                {conf.name}:
+              </span>
+              <span className={`font-bold text-xs shrink-0 ${conf.textColor}`}>
                 {counts[qKey] || 0}
               </span>
             </div>
@@ -148,7 +147,7 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
       <div className="h-68 w-full">
         <ResponsiveContainer width="100%" height={260}>
           <ScatterChart margin={{ top: 15, right: 25, bottom: 20, left: 10 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" opacity={0.7} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" opacity={0.9} />
             <XAxis
               type="number"
               dataKey="infrastructure_readiness_pct"
@@ -159,7 +158,7 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
               label={{
                 value: "Infrastructure Readiness (%) →",
                 position: "bottom",
-                fill: "#94A3B8",
+                fill: "#475569",
                 fontSize: 11,
                 offset: 5,
               }}
@@ -175,7 +174,7 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
                 value: "↑ Academic FLN Score (%)",
                 angle: -90,
                 position: "insideLeft",
-                fill: "#94A3B8",
+                fill: "#475569",
                 fontSize: 11,
               }}
             />
@@ -184,74 +183,71 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
             {/* Statutory Threshold Reference Lines */}
             <ReferenceLine
               x={50}
-              stroke="#EF4444"
+              stroke="#DC2626"
               strokeDasharray="4 4"
               strokeWidth={1.5}
               label={{
                 value: "50% Infra Threshold",
-                fill: "#F87171",
+                fill: "#B91C1C",
                 fontSize: 10,
                 position: "insideTopLeft",
               }}
             />
             <ReferenceLine
               y={65}
-              stroke="#F59E0B"
+              stroke="#D97706"
               strokeDasharray="4 4"
               strokeWidth={1.5}
               label={{
                 value: "65% FLN Cutoff",
-                fill: "#FBBF24",
+                fill: "#B45309",
                 fontSize: 10,
                 position: "insideBottomRight",
               }}
             />
 
             <Tooltip
-              cursor={{ strokeDasharray: "3 3", stroke: "#475569" }}
+              cursor={{ strokeDasharray: "3 3", stroke: "#94A3B8" }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const d = payload[0].payload;
                   const conf = quadrantConfig[d.welfare_quadrant] || {
-                    color: "#38BDF8",
+                    color: "#0284C7",
                     name: d.welfare_quadrant,
                   };
 
                   return (
-                    <div
-                      className="bg-[#0B0F19]/95 border p-3 rounded-xl text-xs shadow-2xl backdrop-blur-md min-w-[220px]"
-                      style={{ borderColor: `${conf.color}60` }}
-                    >
-                      <div className="font-bold text-white text-sm truncate">{d.school_name}</div>
-                      <div className="text-[11px] text-slate-400 mb-2 font-mono">
+                    <div className="bg-white border border-slate-200 p-3 rounded-xl text-xs shadow-lg min-w-[220px]">
+                      <div className="font-bold text-slate-900 text-sm truncate">{d.school_name}</div>
+                      <div className="text-[11px] text-slate-500 mb-2 font-mono">
                         {d.district} &bull; {d.school_id}
                       </div>
 
                       <div className="space-y-1.5 text-xs">
-                        <div className="flex justify-between text-slate-300">
-                          <span className="text-slate-400">Infrastructure:</span>
-                          <span className="text-white font-bold">
+                        <div className="flex justify-between text-slate-600">
+                          <span>Infrastructure:</span>
+                          <span className="text-slate-900 font-bold">
                             {d.infrastructure_readiness_pct.toFixed(1)}%
                           </span>
                         </div>
-                        <div className="flex justify-between text-slate-300">
-                          <span className="text-slate-400">Academic FLN:</span>
-                          <span className="text-white font-bold">
+                        <div className="flex justify-between text-slate-600">
+                          <span>Academic FLN:</span>
+                          <span className="text-slate-900 font-bold">
                             {d.academic_score.toFixed(1)}%
                           </span>
                         </div>
-                        <div className="flex justify-between text-slate-300">
-                          <span className="text-slate-400">Priority Score:</span>
-                          <span className="text-amber-400 font-extrabold">
+                        <div className="flex justify-between text-slate-600">
+                          <span>Priority Score:</span>
+                          <span className="text-amber-700 font-bold">
                             {d.intervention_priority_score.toFixed(1)}
                           </span>
                         </div>
-                        <div className="flex justify-between items-center pt-1.5 border-t border-slate-800">
-                          <span className="text-slate-400">Quadrant:</span>
+                        <div className="flex justify-between items-center pt-1.5 border-t border-slate-100">
+                          <span className="text-slate-500">Quadrant:</span>
                           <span
                             className="font-bold px-2 py-0.5 rounded text-[10px]"
                             style={{
-                              backgroundColor: `${conf.color}20`,
+                              backgroundColor: `${conf.color}15`,
                               color: conf.color,
                             }}
                           >
@@ -260,7 +256,7 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
                         </div>
                       </div>
 
-                      <div className="mt-2 pt-1.5 border-t border-slate-800/80 text-[10px] text-sky-400 flex items-center gap-1 font-semibold">
+                      <div className="mt-2 pt-1.5 border-t border-slate-100 text-[10.5px] text-sky-700 flex items-center gap-1 font-semibold">
                         <ExternalLink className="w-3 h-3" />
                         <span>Click dot to view School 360 profile</span>
                       </div>
@@ -287,8 +283,8 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
                     key={`cell-${index}`}
                     fill={conf?.color || "#0284C7"}
                     fillOpacity={0.8}
-                    stroke={entry.welfare_quadrant === "CRITICAL INTERVENTION" ? "#FFFFFF" : "transparent"}
-                    strokeWidth={entry.welfare_quadrant === "CRITICAL INTERVENTION" ? 1.5 : 0}
+                    stroke={entry.welfare_quadrant === "CRITICAL INTERVENTION" ? "#991B1B" : "transparent"}
+                    strokeWidth={entry.welfare_quadrant === "CRITICAL INTERVENTION" ? 1 : 0}
                   />
                 );
               })}
@@ -298,11 +294,11 @@ export function WelfareGapScatter({ data, onSchoolClick }: WelfareGapScatterProp
       </div>
 
       {/* Footer Instructions */}
-      <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
-        <span className="text-slate-400">
+      <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+        <span>
           Dot size proportional to student enrollment (30–200 range).
         </span>
-        <span className="text-rose-400 font-medium">
+        <span className="text-rose-700 font-semibold">
           {counts["CRITICAL INTERVENTION"] || 0} Priority Focus Institutions
         </span>
       </div>

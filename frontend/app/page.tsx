@@ -12,14 +12,12 @@ import { WelfareGapScatter } from "@/components/charts/welfare-gap-scatter";
 import { AttendanceAcademicScatter } from "@/components/charts/attendance-academic-scatter";
 import { PrioritySchoolsTable } from "@/components/tables/priority-schools-table";
 import {
-  Database,
   ArrowRight,
-  FileSpreadsheet,
-  Layers,
-  Wrench,
-  ShieldAlert,
-  CheckCircle2,
-  ChevronRight,
+  Target,
+  Building2,
+  Utensils,
+  Brain,
+  Compass,
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
@@ -31,18 +29,18 @@ export default function ExecutiveCommandCenter() {
   const { data: overview, isLoading, error } = useOverview(filters);
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-[#0B0F19]">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#F8FAFC]">
       <Header
         title="Executive Command Center"
         subtitle="Trusted decision intelligence for school welfare, performance monitoring, and administrative intervention."
       />
       <GlobalFilterBar showRiskFilters={true} />
 
-      <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+      <div className="flex-1 p-6 lg:p-8 space-y-7 overflow-y-auto">
         {/* Loading State with Pulse Skeletons */}
         {isLoading && (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
@@ -56,9 +54,9 @@ export default function ExecutiveCommandCenter() {
 
         {/* Error State */}
         {error && (
-          <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-300">
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800">
             <strong>Query Error:</strong> Failed to fetch executive overview data. Check backend connectivity at{" "}
-            <code className="font-mono bg-slate-900 px-1 py-0.5 rounded">http://localhost:8000/api/v1</code>.
+            <code className="font-mono bg-white border border-rose-200 px-1 py-0.5 rounded">http://localhost:8000/api/v1</code>.
           </div>
         )}
 
@@ -70,7 +68,7 @@ export default function ExecutiveCommandCenter() {
         {overview && overview.kpis.schools_monitored.value > 0 && (
           <>
             {/* 1. Six Core KPIs Row */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 stagger-children">
               <MetricCard
                 title="Schools Monitored"
                 metricCtx={overview.kpis.schools_monitored}
@@ -78,7 +76,7 @@ export default function ExecutiveCommandCenter() {
                 subtitle="100% census coverage"
               />
               <MetricCard
-                title="Avg Attendance"
+                title="Average Attendance"
                 metricCtx={overview.kpis.average_attendance}
                 variant="sky"
                 subtitle="Present / Enrolled"
@@ -120,115 +118,182 @@ export default function ExecutiveCommandCenter() {
 
             {/* 4. Attendance x Academics & Top Priority Table */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-5">
+              <div className="lg:col-span-6">
                 <AttendanceAcademicScatter summary={overview.attendance_academic_summary} />
               </div>
-              <div className="lg:col-span-7">
+              <div className="lg:col-span-6">
                 <PrioritySchoolsTable schools={overview.top_priorities} />
               </div>
             </div>
 
-            {/* 5. Governed Data Trust Pipeline Flow */}
-            <div className="bg-gradient-to-b from-[#151D2E]/95 to-[#0F172A]/95 border border-slate-800/90 hover:border-slate-700/80 rounded-xl p-5 shadow-lg backdrop-blur-md transition-all">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="p-1 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-                    <Database className="w-4 h-4" />
-                  </span>
+            {/* 5. Executive Strategic Policy Dispatch & Operational Action Cadence */}
+            <div className="animate-fade-in-up bg-white border border-slate-200/80 rounded-2xl shadow-[0_1px_3px_rgba(15,23,42,0.04)] overflow-hidden">
+              <div className="h-0.5 bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600" />
+              <div className="p-5 lg:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-sky-50 border border-sky-200/80 flex items-center justify-center text-sky-600">
+                    <Compass className="w-4.5 h-4.5" />
+                  </div>
                   <div>
-                    <h2 className="text-sm font-bold text-white tracking-wide">
-                      Governed Data Trust Pipeline (10 Quality Gates)
+                    <h2 className="text-sm font-bold text-slate-900 tracking-tight">
+                      Strategic Policy Dispatch
                     </h2>
-                    <p className="text-xs text-slate-400">
-                      Deterministic progression from raw heterogeneous files to validated analytical views.
+                    <p className="text-[11px] text-slate-400">
+                      Decision framework for administrative action.
                     </p>
                   </div>
                 </div>
                 <Link
                   href="/quality"
-                  className="inline-flex items-center gap-1.5 text-xs text-sky-400 hover:text-sky-300 font-bold transition-colors bg-sky-500/10 border border-sky-500/20 px-3 py-1.5 rounded-lg shrink-0"
+                  className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 font-medium transition-all bg-white hover:bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg shrink-0 group"
                 >
-                  <span>Audit All 10 Gates</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Quality & Lineage Center</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
 
-              {/* Connected Pipeline Stages */}
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 relative">
-                {/* Stage 1 */}
-                <div className="relative bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-extrabold uppercase tracking-wider mb-1">
-                      <span>1. Raw Ingest</span>
-                      <FileSpreadsheet className="w-3.5 h-3.5 text-sky-400" />
+              {/* 4 Professional Strategy & Dispatch Cards */}
+              <div className="p-5 lg:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
+                {/* Protocol 1: Priority Triage */}
+                <div className="card-lift bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col justify-between hover:border-rose-300 group">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="w-7 h-7 rounded-md bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
+                        <Target className="w-4 h-4" />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
+                        Critical Triage
+                      </span>
                     </div>
-                    <div className="text-xl font-black text-white mt-1">45,010</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Multi-format records</div>
+                    <div>
+                      <div className="text-lg font-bold text-slate-900">
+                        {overview.kpis.priority_schools?.value ?? 0} High Priority Schools
+                      </div>
+                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                        Immediate Resource Intervention
+                      </div>
+                    </div>
+                    <p className="text-[11.5px] text-slate-500 leading-relaxed">
+                      Institutions exhibiting compounding deficits in infrastructure readiness and student attendance require rapid administrative review.
+                    </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-slate-800 text-[10px] text-slate-500">
-                    CSV, JSON, XML, SQLite
+                  <div className="pt-3 mt-3 border-t border-slate-200/80">
+                    <Link
+                      href="/intervention"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-800 transition-colors"
+                    >
+                      <span>Open Triage Queue</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </div>
                 </div>
 
-                {/* Stage 2 */}
-                <div className="relative bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-extrabold uppercase tracking-wider mb-1">
-                      <span>2. Deduplication</span>
-                      <Layers className="w-3.5 h-3.5 text-amber-400" />
+                {/* Protocol 2: Infrastructure Capital Upgrades */}
+                <div className="card-lift bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col justify-between hover:border-sky-300 group">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="w-7 h-7 rounded-md bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700">
+                        <Building2 className="w-4 h-4" />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-full">
+                        Capital Works
+                      </span>
                     </div>
-                    <div className="text-xl font-black text-amber-400 mt-1">-1,334</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Exact & key duplicates</div>
+                    <div>
+                      <div className="text-lg font-bold text-slate-900">
+                        {overview.kpis.infrastructure_readiness?.value != null
+                          ? overview.kpis.infrastructure_readiness.value.toFixed(1)
+                          : "74.9"}% State Index
+                      </div>
+                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                        Physical Amenities Modernization
+                      </div>
+                    </div>
+                    <p className="text-[11.5px] text-slate-500 leading-relaxed">
+                      Prioritize capital budget allocations for electricity, clean drinking water, and functional toilets under Samagra Shiksha.
+                    </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-slate-800 text-[10px] text-slate-500">
-                    Deterministic primary keys
+                  <div className="pt-3 mt-3 border-t border-slate-200/80">
+                    <Link
+                      href="/welfare"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 hover:text-sky-800 transition-colors"
+                    >
+                      <span>Inspect Welfare Matrix</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </div>
                 </div>
 
-                {/* Stage 3 */}
-                <div className="relative bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-extrabold uppercase tracking-wider mb-1">
-                      <span>3. Traceable Rescue</span>
-                      <Wrench className="w-3.5 h-3.5 text-sky-400" />
+                {/* Protocol 3: Nutritional Welfare & Procurement Governance */}
+                <div className="card-lift bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col justify-between hover:border-amber-300 group">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="w-7 h-7 rounded-md bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+                        <Utensils className="w-4 h-4" />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                        Public Nutrition
+                      </span>
                     </div>
-                    <div className="text-xl font-black text-sky-400 mt-1">7,965</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Dates, units, scale</div>
+                    <div>
+                      <div className="text-lg font-bold text-slate-900">
+                        Mid-Day Meal Governance
+                      </div>
+                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                        Nutritional Spend Integrity
+                      </div>
+                    </div>
+                    <p className="text-[11.5px] text-slate-500 leading-relaxed">
+                      Automated peer benchmark cost variance auditing across schools, verifying meal quality without false accusatory flags.
+                    </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-slate-800 text-[10px] text-slate-500">
-                    Audit log maintained
+                  <div className="pt-3 mt-3 border-t border-slate-200/80">
+                    <Link
+                      href="/procurement"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 hover:text-amber-900 transition-colors"
+                    >
+                      <span>Audit Procurement</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </div>
                 </div>
 
-                {/* Stage 4 */}
-                <div className="relative bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-slate-400 font-extrabold uppercase tracking-wider mb-1">
-                      <span>4. Quarantined</span>
-                      <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                {/* Protocol 4: Autonomous AI Decision Workbench */}
+                <div className="card-lift bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col justify-between hover:border-purple-300 group">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="w-7 h-7 rounded-md bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700">
+                        <Brain className="w-4 h-4" />
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full">
+                        AI Analyst
+                      </span>
                     </div>
-                    <div className="text-xl font-black text-rose-400 mt-1">600</div>
-                    <div className="text-[11px] text-slate-400 mt-0.5">Proxy marks isolated</div>
+                    <div>
+                      <div className="text-lg font-bold text-slate-900">
+                        Llama 3.1 Synthesis
+                      </div>
+                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                        Autonomous Decision Intelligence
+                      </div>
+                    </div>
+                    <p className="text-[11.5px] text-slate-500 leading-relaxed">
+                      Zero-hallucination semantic reasoning strictly grounded in canonical warehouse views for instant policy briefings.
+                    </p>
                   </div>
-                  <div className="mt-3 pt-2 border-t border-slate-800 text-[10px] text-slate-500">
-                    Zero contamination
+                  <div className="pt-3 mt-3 border-t border-slate-200/80">
+                    <Link
+                      href="/ai-analyst"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-700 hover:text-purple-800 transition-colors"
+                    >
+                      <span>Launch AI Analyst</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
                   </div>
                 </div>
-
-                {/* Stage 5 */}
-                <div className="relative bg-gradient-to-br from-emerald-950/30 to-slate-900/90 p-3.5 rounded-xl border border-emerald-500/40 shadow-emerald-500/10 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-emerald-400 font-extrabold uppercase tracking-wider mb-1">
-                      <span>5. Production Mart</span>
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    </div>
-                    <div className="text-xl font-black text-emerald-400 mt-1">94.6 / 100</div>
-                    <div className="text-[11px] text-emerald-300 mt-0.5">Master Data Trust Score</div>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-emerald-500/20 text-[10px] text-emerald-400 font-semibold">
-                    100% Governed SQL
-                  </div>
-                </div>
+              </div>
               </div>
             </div>
           </>

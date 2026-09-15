@@ -16,13 +16,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-[#0B0F19] text-[#F8FAFC]">
-      <body className="h-full flex min-h-screen bg-[#0B0F19]">
+    <html lang="en" className="h-full bg-[#F8FAFC] text-slate-900">
+      <body className="h-full flex min-h-screen bg-[#F8FAFC] text-slate-900 antialiased">
         <Providers>
           <FilterProvider>
             <div className="flex w-full min-h-screen">
               <Sidebar />
-              <main className="flex-1 flex flex-col min-w-0 bg-[#0B0F19]">
+              <main className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC]">
                 {children}
               </main>
               <GlobalAIChatbot />

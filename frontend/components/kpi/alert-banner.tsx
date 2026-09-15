@@ -21,33 +21,33 @@ export function AlertBanner({ alerts }: { alerts: DynamicAlert[] }) {
 
         const config = isCritical
           ? {
-              card: "border-rose-500/30 bg-gradient-to-br from-rose-950/20 via-[#151D2E]/90 to-[#0F172A]/90 hover:border-rose-500/50 shadow-rose-950/20",
-              badge: "bg-rose-500/15 text-rose-300 border-rose-500/30",
+              card: "border-slate-200 bg-white hover:border-rose-300",
+              badge: "bg-rose-50 text-rose-700 border-rose-200",
               badgeText: "CRITICAL WELFARE",
               icon: AlertOctagon,
-              iconColor: "text-rose-400",
+              iconColor: "text-rose-600",
               accentBorder: "border-l-4 border-l-rose-500",
               linkHref: "/intervention",
               linkText: "Review Intervention Queue",
             }
           : isWarning
           ? {
-              card: "border-amber-500/30 bg-gradient-to-br from-amber-950/20 via-[#151D2E]/90 to-[#0F172A]/90 hover:border-amber-500/50 shadow-amber-950/20",
-              badge: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+              card: "border-slate-200 bg-white hover:border-amber-300",
+              badge: "bg-amber-50 text-amber-700 border-amber-200",
               badgeText: "FACILITY BOTTLENECK",
               icon: AlertTriangle,
-              iconColor: "text-amber-400",
+              iconColor: "text-amber-600",
               accentBorder: "border-l-4 border-l-amber-500",
               linkHref: "/welfare",
               linkText: "Inspect Infrastructure Gap",
             }
           : {
-              card: "border-sky-500/30 bg-gradient-to-br from-sky-950/20 via-[#151D2E]/90 to-[#0F172A]/90 hover:border-sky-500/50 shadow-sky-950/20",
-              badge: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+              card: "border-slate-200 bg-white hover:border-sky-300",
+              badge: "bg-sky-50 text-sky-700 border-sky-200",
               badgeText: "EMPIRICAL INSIGHT",
               icon: Lightbulb,
-              iconColor: "text-sky-400",
-              accentBorder: "border-l-4 border-l-sky-500",
+              iconColor: "text-sky-600",
+              accentBorder: "border-l-4 border-l-sky-600",
               linkHref: "/schools",
               linkText: "Audit School Performance",
             };
@@ -57,67 +57,65 @@ export function AlertBanner({ alerts }: { alerts: DynamicAlert[] }) {
         return (
           <div
             key={idx}
-            className={`relative rounded-xl border p-4 backdrop-blur-md transition-all duration-200 shadow-lg flex flex-col justify-between overflow-hidden group ${config.card} ${config.accentBorder}`}
+            className={`relative rounded-xl border p-4.5 transition-all duration-150 shadow-2xs flex flex-col justify-between overflow-hidden group ${config.card} ${config.accentBorder}`}
           >
             {/* Header: Badge + Category Title */}
             <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center justify-between gap-2 mb-2.5">
                 <span
                   className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wider ${config.badge}`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full ${
-                      isCritical ? "bg-rose-400 animate-ping" : isWarning ? "bg-amber-400" : "bg-sky-400"
+                      isCritical ? "bg-rose-500" : isWarning ? "bg-amber-500" : "bg-sky-600"
                     }`}
                   />
                   {config.badgeText}
                 </span>
 
-                <span className="text-[11px] font-semibold text-slate-400 truncate">
+                <span className="text-[11px] font-semibold text-slate-500 truncate">
                   {alert.title}
                 </span>
               </div>
 
               {/* Core Finding Headline */}
-              <div className="text-sm font-bold text-white tracking-tight leading-snug mt-1 flex items-start gap-2">
+              <div className="text-sm font-bold text-slate-900 tracking-tight leading-snug flex items-start gap-2">
                 <Icon className={`w-4 h-4 shrink-0 mt-0.5 ${config.iconColor}`} />
                 <span>{alert.finding}</span>
               </div>
 
-              {/* Structured Metadata: Evidence & Strategic Interpretation */}
-              <div className="mt-3 space-y-2 text-xs">
-                <div className="bg-slate-900/70 border border-slate-800/80 rounded-lg p-2.5">
-                  <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1 mb-1">
-                    <TrendingUp className="w-3 h-3 text-sky-400" />
-                    Analytical Evidence
-                  </div>
-                  <p className="text-slate-300 text-[11px] leading-relaxed">
+              {/* Sleek Briefing Body */}
+              <div className="mt-3 bg-slate-50/70 border border-slate-200/70 rounded-lg p-3 space-y-2">
+                <div className="flex items-start gap-2 text-xs">
+                  <span className="text-[10px] uppercase font-bold text-sky-700 bg-sky-50 border border-sky-200/80 px-1.5 py-0.5 rounded shrink-0">
+                    Evidence
+                  </span>
+                  <p className="text-slate-600 text-[11.5px] leading-relaxed">
                     {alert.evidence}
                   </p>
                 </div>
 
-                <div className="bg-slate-900/50 border border-slate-800/60 rounded-lg p-2.5">
-                  <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1 mb-1">
-                    <Lightbulb className="w-3 h-3 text-amber-400" />
-                    Executive Guidance
-                  </div>
-                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                <div className="flex items-start gap-2 text-xs pt-2 border-t border-slate-200/60">
+                  <span className="text-[10px] uppercase font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded shrink-0">
+                    Guidance
+                  </span>
+                  <p className="text-slate-600 text-[11.5px] leading-relaxed">
                     {alert.interpretation}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Footer with statutory limitation & drilldown link */}
-            <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2 text-[10px]">
-              <div className="flex items-center gap-1.5 text-slate-400 italic truncate" title={alert.limitation}>
-                <ShieldCheck className="w-3 h-3 text-emerald-400 shrink-0" />
+            {/* Footer with statutory limitation & action link */}
+            <div className="pt-2.5 mt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-[10.5px]">
+              <div className="flex items-center gap-1.5 text-slate-400 text-[10px] truncate" title={alert.limitation}>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span className="truncate">{alert.limitation}</span>
               </div>
 
               <Link
                 href={config.linkHref}
-                className="inline-flex items-center gap-1 font-semibold text-sky-400 hover:text-sky-300 shrink-0 transition-colors"
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-700 hover:text-sky-800 shrink-0 transition-colors px-2 py-0.5 rounded bg-sky-50 hover:bg-sky-100 border border-sky-200"
               >
                 <span>Action</span>
                 <ArrowUpRight className="w-3 h-3" />

@@ -1,44 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg-canvas: #0B0F19;
-  --bg-card: #151D2E;
-  --bg-card-hover: #1A2438;
-  --border-subtle: #2A364F;
-  --border-active: #0284C7;
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --color-primary: #0284C7;
-  --color-emerald: #10B981;
-  --color-amber: #F59E0B;
-  --color-rose: #EF4444;
+  --bg-canvas: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAFC;
+  --border-subtle: #E2E8F0;
+  --border-active: #0369A1;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --color-primary: #0369A1;
+  --color-emerald: #059669;
+  --color-amber: #D97706;
+  --color-rose: #DC2626;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 body {
   background-color: var(--bg-canvas);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--font-sans);
+  letter-spacing: -0.011em;
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
-/* Scrollbar styling */
+h1, h2, h3, h4, .font-heading {
+  letter-spacing: -0.025em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Premium Fade-In Entrance Animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(3, 105, 161, 0.12); }
+  50% { box-shadow: 0 0 0 6px rgba(3, 105, 161, 0); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered entry for grid children */
+.stagger-children > * {
+  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 350ms; }
+
+/* ─── Premium Card Hover Effects ─── */
+.card-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -5px rgba(15, 23, 42, 0.08),
+              0 4px 10px -6px rgba(15, 23, 42, 0.04);
+  border-color: #CBD5E1;
+}
+
+/* ─── Subtle Progress Bar Animation ─── */
+@keyframes progressGrow {
+  from { width: 0; }
+}
+
+.animate-progress {
+  animation: progressGrow 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Metric Number Counter Feel ─── */
+.metric-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+/* ─── Status Badge Pulse for Live Indicators ─── */
+.pulse-live {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ─── Elegant Scrollbar Styling ─── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B0F19;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2A364F;
-  border-radius: 3px;
+  background: #CBD5E1;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0284C7;
+  background: #94A3B8;
 }
+
+/* ─── Focus Ring for Accessibility ─── */
+*:focus-visible {
+  outline: 2px solid #0284C7;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Smooth Page Transitions ─── */
+main {
+  animation: fadeIn 0.3s ease-out;
+}
+

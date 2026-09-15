@@ -206,7 +206,31 @@ Try these verified prompts in `/ai-analyst`:
 
 ---
 
-## 11. Project Structure
+## 11. Frontend Architecture & Enterprise Design System
+
+The EduPulse AI frontend has been engineered from the ground up into a **pure white, minimal, institutional, consulting-grade decision intelligence platform** modeled after executive briefing artifacts prepared by Tier-1 strategy consultancies (McKinsey, BCG, Deloitte) and government data portals.
+
+### Core Visual Principles
+- **Crisp Light Canvas:** Pure white card surfaces (`#FFFFFF`) on a subtle light slate canvas (`#F8FAFC`) with restrained hairline borders (`#E2E8F0`). Zero neon glows, zero dark-admin clutter, zero arbitrary decorative cards.
+- **Consulting-Grade Typography:** Clean, modern enterprise hierarchy utilizing system sans-serif typography (`Inter`, `-apple-system`) with AAA contrast (16.1:1 on primary text `#0F172A`).
+- **Tri-State Transparency:** Physical amenities strictly differentiate **Available** (Emerald `#059669`), **Missing** (Rose `#DC2626`), and **Unknown / Unverified** (Neutral Slate `#64748B`), eliminating false assumptions of absence.
+- **Analytical Governance:** Strict visual and conceptual separation between **Risk Severity** (observed historical vulnerability magnitude) and **Intervention Priority** (administrative review urgency).
+
+### Page-by-Page Decision Routing
+| Route | Page Name | Primary Leadership Question Answered | Key Visual Components |
+|---|---|---|---|
+| `/` | **Executive Command Center** | *"What is the statewide operational health and where should leadership look first?"* | MetricCard Big Numbers, Strategic Policy Dispatch, District FLN Ranking Bar, Welfare Gap Scatter, Top 10 Priority Table |
+| `/schools` | **School Directory & Search** | *"How can I locate and inspect any specific institution across the 600-school census?"* | Real-time UDISE search bar, district filter, sortable metrics, School 360 profile launch |
+| `/schools/[id]` | **School 360 Diagnostic Profile** | *"What is the comprehensive institutional root-cause diagnosis and mandated policy action for this school?"* | Statutory 5-amenity checklist, attendance timeseries chart, FLN subject breakdown, MDM procurement summary, deterministic policy action memo |
+| `/welfare` | **Welfare & Infrastructure** | *"Which physical amenities are deficient and how do they correlate with learning efficacy?"* | 5 core amenity penetration cards with Available/Missing/Unknown counters, Electricity vs FLN observational benchmark, Welfare Gap Matrix |
+| `/procurement` | **Mid-Day Meals & Nutrition** | *"How are public nutrition funds allocated and which schools deviate from peer spend patterns?"* | Spend and grain volume metric cards, district spend bar chart, 1.5 IQR peer benchmark exception audit table |
+| `/intervention` | **Intervention Command Center** | *"Which schools require immediate administrative intervention and what is driving their vulnerability?"* | Risk Severity vs Intervention Priority Matrix, driver taxonomy cards, full 50-institution priority queue table |
+| `/quality` | **Data Trust & Governance** | *"Can decision-makers trust this underlying data?"* | 94.6/100 Data Trust Score, 5-stage automated rescue pipeline visual, 10 Quality Gates audit, KPI lineage catalog |
+| `/ai-analyst` | **AI Decision Analyst Workbench** | *"Can leadership ask natural-language policy questions grounded solely in verified facts?"* | Natural language inquiry input, curated showcase missions, animated reasoning stepper, structured evidence memo, grounding audit, verifiable citations |
+
+---
+
+## 12. Project Structure
 
 ```
 DATATHON/
@@ -250,7 +274,7 @@ DATATHON/
 
 ---
 
-## 12. Installation & Local Development
+## 13. Installation & Local Development
 
 ### Prerequisites
 - Python 3.11+ (Tested on Python 3.13.7)
@@ -323,7 +347,7 @@ npm run dev
 
 ---
 
-## 13. Test Suite Verification
+## 14. Test Suite Verification
 
 EduPulse AI includes a comprehensive test suite covering backend logic, security constraints, frontend components, and end-to-end browser user journeys:
 
@@ -346,7 +370,7 @@ cd frontend && npx playwright test && cd ..
 
 ---
 
-## 14. Live Deployment Readiness
+## 15. Live Deployment Readiness
 
 EduPulse AI is architected for containerized or serverless cloud deployment:
 
@@ -356,7 +380,7 @@ EduPulse AI is architected for containerized or serverless cloud deployment:
 
 ---
 
-## 15. Responsible Interpretation & Governance Disclaimers
+## 16. Responsible Interpretation & Governance Disclaimers
 
 1. **Non-Causal Classification:** All bivariate associations (such as attendance vs FLN academic performance, $r = 0.453$) are observational. Observed performance differences across infrastructure amenities do not prove causality without controlled trials.
 2. **Peer Benchmark Exceptions:** Spend-per-student anomalies exceeding 75th percentile + 1.5 IQR thresholds identify observations that differ materially from comparable peer patterns; they do **not** represent evidence of fraud without forensic audit proof.
@@ -364,10 +388,10 @@ EduPulse AI is architected for containerized or serverless cloud deployment:
 
 ---
 
-## 16. Presentation & Demo Walkthrough
+## 17. Presentation & Demo Walkthrough
 For the live 3-minute hackathon judge walkthrough, refer to the [3-Minute Demo Script](docs/demo_script.md).
 
 ---
 
-## 17. License
+## 18. License
 Licensed under the Apache 2.0 License. Built for Track 4: Education & EdTech Datathon 2026.

@@ -48,6 +48,8 @@ frontend/out/
 frontend/build/
 frontend/test-results/
 frontend/playwright-report/
+test-results/
+playwright-report/
 frontend/tsconfig.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*

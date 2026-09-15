@@ -1,54 +1,50 @@
 "use client";
 
 import React from "react";
-import { ShieldCheck, RotateCcw, Filter, Activity, Sparkles } from "lucide-react";
+import { ShieldCheck, RotateCcw, Filter, Activity } from "lucide-react";
 import { useGlobalFilters } from "@/components/filters/filter-context";
 
 export function Header({ title, subtitle }: { title: string; subtitle?: string }) {
   const { resetFilters, activeCount } = useGlobalFilters();
 
   return (
-    <header className="h-16 border-b border-slate-800 bg-[#0F172A]/85 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between px-6 shadow-sm">
+    <header className="h-15 border-b border-slate-200 bg-white sticky top-0 z-20 flex items-center justify-between px-6 shadow-xs">
       <div>
-        <h1 className="text-base font-extrabold text-white tracking-tight flex items-center gap-2">
-          <span>{title}</span>
+        <h1 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+          {title}
         </h1>
-        {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+        {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Live System Telemetry Status */}
-        <div className="hidden sm:flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-3 py-1 rounded-lg text-[11px] text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
-          <span className="text-slate-300 font-medium">DuckDB Mart</span>
-          <span className="text-slate-500 font-mono text-[10px]">&bull; sub-10ms query</span>
-        </div>
-
+      <div className="flex items-center gap-2.5">
         {/* Active Filters Pill */}
         {activeCount > 0 && (
-          <div className="flex items-center gap-2 bg-sky-500/15 border border-sky-500/30 text-sky-400 px-2.5 py-1 rounded-lg text-xs font-semibold shadow-sm">
-            <Filter className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-sky-800 px-2.5 py-1 rounded text-xs font-medium">
+            <Filter className="w-3.5 h-3.5 text-sky-600" />
             <span>
-              {activeCount} Filter{activeCount > 1 ? "s" : ""} Active
+              {activeCount} Filter{activeCount > 1 ? "s" : ""}
             </span>
             <button
               onClick={resetFilters}
-              className="ml-1 text-slate-400 hover:text-white transition-colors"
-              title="Reset All Filters"
+              className="ml-1 text-slate-400 hover:text-slate-700 transition-colors"
+              title="Reset Filters"
             >
               <RotateCcw className="w-3 h-3" />
             </button>
           </div>
         )}
 
+        {/* System Telemetry Status */}
+        <div className="hidden sm:flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-md text-xs text-slate-600">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[11px] font-medium text-slate-700">Live Telemetry</span>
+        </div>
+
         {/* Data Trust Score Pill */}
-        <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-950/40 to-slate-900/90 border border-emerald-500/30 px-3 py-1.5 rounded-lg shadow-sm">
-          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span className="text-xs text-slate-400 font-medium">Data Trust:</span>
-          <span className="text-xs font-black text-emerald-400">94.6</span>
-          <span className="text-[10px] font-bold text-emerald-400/80 bg-emerald-500/10 px-1.5 py-0.2 rounded border border-emerald-500/20 hidden md:inline">
-            GOVERNED
-          </span>
+        <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded text-xs font-semibold">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="text-slate-600 font-normal">Data Trust:</span>
+          <span>94.6 / 100</span>
         </div>
       </div>
     </header>
